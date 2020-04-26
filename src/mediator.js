@@ -1,4 +1,4 @@
-import { formatDistanceToNow } from 'date-fns'
+import { formatDistanceToNow, toDate } from 'date-fns'
 import _ from 'lodash'
 import * as todo from './todo.js'
 import * as project from './project.js'
@@ -20,6 +20,47 @@ function removeFromProject(todo, project){
     project.todos[todo.projectIndex] = null;
 }
 
+function toggleCompleted(todo) {
+    (todo.complete === false) ? todo.complete = true : todo.complete = false;
+}
+
+function getYearDue(dateInputFromDOM) {
+    return dateInputFromDOM.slice(0,4)
+}
+
+function getMonthDue(dateInputFromDOM) {
+    return dateInputFromDOM.slice(5,7)
+}
+
+function getDayDue(dateInputFromDOM) {
+    return dateInputFromDOM.slice(8,10)
+
+}
+
+function getHourDue(dateInputFromDOM) {
+    return dateInputFromDOM.slice(11,13)
+}
+
+function getMinuteDue(dateInputFromDOM) {
+    return dateInputFromDOM.slice(14,16)
+}
+
+function formatDueDate(dateInputFromDOM) {
+    const year = getYearDue(dateInputFromDOM)
+    const month = getMonthDue(dateInputFromDOM)
+    const day = getDayDue(dateInputFromDOM)
+    const hour = getHourDue(dateInputFromDOM)
+    const min = getMinuteDue(dateInputFromDOM)
+    let newDueDate
+    return newDueDate = toDate(new Date(year, month, day, hour, min))
+}
+
+function setTodoDueDate(todo, dateInputFromDOM) {
+    const newDueDate = formatDueDate(dateInputFromDOM)
+    todo.dueDate = newDueDate;
+}
+
+///Test parameters
 let partyProject = project.addProject("Party Time")
 let workProject = project.addProject("Work")
 
@@ -39,18 +80,12 @@ let todo5 = todo.add("Todo 5 title", "Todo description",
     "13/15/2020", 2, false, 
     "workProject")
 
-
-
-
 addToProject(todo1, partyProject)
 addToProject(todo2, workProject)
 addToProject(todo3, workProject)
 addToProject(todo4, partyProject)
-console.log(todo3);
 
-removeFromProject(todo2, workProject)
-addToProject(todo5, workProject)
-
-
-console.log(partyProject)
-console.log(workProject)
+const inputtedDate = "2020-02-24T20:07"
+console.log(todo3)
+setTodoDueDate(todo3, inputtedDate)
+console.log(formatDistanceToNow(todo3.dueDate))

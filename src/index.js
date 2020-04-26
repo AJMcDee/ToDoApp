@@ -13,3 +13,9 @@ function component() {
   document.body.appendChild(component());
 
 
+  const button = document.getElementById("submit")
+  button.addEventListener("click", function () {
+    const dueDate = document.getElementById("duedate").value
+    console.log(dueDate)
+  })
+
