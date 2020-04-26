@@ -2,54 +2,67 @@
   <html>
    <head>
      <title>Tell me what ToDo</title>
+     
      <link rel="stylesheet" href="./styles.css"></link>
    </head>
    <body>
      <main id="container">
-       <div id="websitetitle">          <h1>Your Todo List</h1></div>
+       <div id="websitetitle">          <h1>Tell me what ToDo</h1></div>
+        <div id="contentcontainer">
+          <div id="projectcontainer">       
 
-        <div id="projectcontainer">       
-
-          <div class="project" id="exampleproject1"><h5>First Birthday Planning</h5><b>Next item due: Around 5 Days</b></div>
-          <div class="project" id="exampleproject2"><h5>Work Assignments</h5><b>Next item due: Next week</b></div>
-        </div>
-
-        <div class="optionsheader">
-          Sort by due date | Number of items left to do: 
-        </div>
-
-        <div id="todocontainer">
-          
-          <div class="todo" id="exampletodo1">
-            <h4 class="todotitle">Arrange house maintenance</h4>
-            <p class="tododescription">Ensure the plumber knows we're not available on Sundays</p>
-            <p class="tododuedate"><b>Due:</b> 4 July 2020</p>
-            <p class="priority"><b>Priority:</b><select id="priority">
-              <option value="1" id="urgentchoice">Urgent</option>
-              <option value="2">Very Important</option>
-              <option value="3">Important</option>
-              <option value="4">Preferred</option>
-              <option value="5">Not Important</option>
-            </select>
-            <p class="complete"><input type="checkbox"><b>Complete?</b></input> <a id="edittodo">Edit Details</a></p>
-            
+            <div class="project" id="exampleproject1"><h5>First Birthday Planning</h5><b>Next item due:</b><br> Around 5 Days</div>
+            <div class="project" id="exampleproject2"><h5>Work Assignments</h5><b>Next item due:</b><br> Next week</div>
           </div>
-          <div class="todo" id="exampletodo2">
-            <input type="text" class="todotitle" value="Todo Edit" size="10"></input>
-            <input type="text" class="editdescription" value="Ensure that the plumber knows we're not available on Sundays"></input></p>
-            <p class="editduedate"><b>Due:</b> <input type="datetime-local" id="duedate"></input>
-              <button id="submit">Submit</button>
-            <p class="editpriority"><b>Priority:</b><select id="priority">
-              <option value="1">Urgent</option>
-              <option value="2">Very Important</option>
-              <option value="3">Important</option>
-              <option value="4">Preferred</option>
-              <option value="5">Not Important</option>
-            </select></p>
-            <p><input type="checkbox"><b>Complete?</b></input> <button>Save Changes</button></p>
+
+          <div id="optionsandtodocontainer">
+
+            <div id="optionsheader">
+              Sort by:  <select id="sort">
+                <option value="sortdue">Due date</option>
+                <option value="sortpriority">Priority: highest to lowest</option>
+                <option value="sortpriority">Priority: lowest to highest</option>
+              </select> 
+              
+              
+              
+              | Items completed: 3 
+              | Number of items left to do: 5 
+              | Switch to list view
+            </div>
+
+            <div id="todocontainer">
+              
+              <div class="todo" id="exampletodo1">
+                <div class="todotitle">Arrange house maintenance</div>
+                <div class="tododescription">Ensure the plumber knows we're not available on Sundays</div>
+                <div class="tododuedate"><b>Due:</b> 4 July 2020</div>
+                <div class="priority"><b>Priority:</b><select id="priority">
+                  <option value="1" id="urgentchoice">Urgent</option>
+                  <option value="2">Very Important</option>
+                  <option value="3">Important</option>
+                  <option value="4">Preferred</option>
+                  <option value="5">Not Important</option>
+                </select></div>
+                <div class="complete"><input type="checkbox"><b>Complete?</b></input> | <a id="edittodo">Edit Details</a></div>
+                
+              </div>
+              <div class="todo" id="exampletodo2">
+                <div><input type="text" class="todotitle" value="Todo Edit" size="10"></input></div>
+                <div class="editdescription"><textarea>Ensure that the plumber knows we're not available on Sundays</textarea></p>
+                <div class="editduedate"><b>Due:</b> <input type="datetime-local" id="duedateinput"></input></div>
+                <div class="editpriority"><b>Priority:</b><select id="priority">
+                  <option value="1">Urgent</option>
+                  <option value="2">Very Important</option>
+                  <option value="3">Important</option>
+                  <option value="4">Preferred</option>
+                  <option value="5">Not Important</option>
+                </select></div>
+                <div><input type="checkbox"><b>Complete?</b></input> <button>Save Changes</button></div>
+              </div>
+              </div>
+            </div>
           </div>
-          </div>
-            
             
             
           
