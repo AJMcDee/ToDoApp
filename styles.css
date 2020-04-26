@@ -1,36 +1,83 @@
-body {
+body div{
+    border: 1px solid black;
+}
+
+h5 {
+    font-size: 18px;
+}
+
+#websitetitle {
+    text-align: center;
 
 }
 
 #container {
     display: flex;
     flex-direction: column;
+    justify-content: center;
 
+}
+
+#contentcontainer {
+    display: flex;
+    flex-direction: row;
 }
 #projectcontainer {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    border: 1px solid grey;
+    justify-content: center;
+    height: 100%;
+}
+
+#optionsandtodocontainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 50px;
+}
+
+#optionsheader {
+    height: 30px;
+    padding: 15px;
+    border-bottom: 1px solid grey;
+    text-align: center;
 }
 
 .project {
     border: 1px solid black;
-    padding: 5px;
+    padding: 0px 15px 20px 15px;
     margin: 5px;
+    border-radius: 10%;
+    text-align: center;
+    background-color: rgb(180, 220, 221);
+    box-shadow: 2px 2px 2px grey;
+    font-size: 14px
+
 }
 
 #todocontainer {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
 }
 
 .todo {
     border: 1px solid black;
     padding: 10px;
     margin: 10px;
+    flex-basis: 200px;
+    border-radius: 10%;
+    box-shadow: 2px 2px 2px grey;
+
+    display: flex;
+    flex-direction: column;
+
+
 }
 
 .todotitle {
-    font-size: 40px;
+    font-size: 30px;
 }
 
 /* FIX THIS: make different options hold different bg color properties */
@@ -44,3 +91,18 @@ body {
     border-radius:15px;
     background-color:blue;
    }
+
+#duedateinput {
+    width: 80%;
+}
+
+.editdescription {
+   justify-self: start;
+   width: 95%;
+   flex-grow: 2;
+}
+
+.editdescription textarea {
+    width: 95%;
+    height: 50px;
+}
