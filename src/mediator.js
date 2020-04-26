@@ -3,8 +3,9 @@ import _ from 'lodash'
 import * as todo from './todo.js'
 import * as project from './project.js'
 
+// Add, remove, and change todos between projects
 
-function addToProject(newTodo, projectName){
+export function addToProject(newTodo, projectName){
 
         const index = projectName.todos.indexOf(null);
         if (index === -1) {
@@ -16,13 +17,20 @@ function addToProject(newTodo, projectName){
         }  
 }
 
-function removeFromProject(todo, project){
+export function removeFromProject(todo, project){
     project.todos[todo.projectIndex] = null;
 }
 
-function toggleCompleted(todo) {
-    (todo.complete === false) ? todo.complete = true : todo.complete = false;
+export function changeTodoProject(todo, oldProject, newProject) {
+    removeFromProject(todo, oldProject)
+    addToProject(todo, newProject)
+
 }
+
+
+// Convert date inputs from DOM to code useable by date-fns
+
+
 
 function getYearDue(dateInputFromDOM) {
     return dateInputFromDOM.slice(0,4)
@@ -55,37 +63,40 @@ function formatDueDate(dateInputFromDOM) {
     return newDueDate = toDate(new Date(year, month, day, hour, min))
 }
 
-function setTodoDueDate(todo, dateInputFromDOM) {
+
+// Change properties of the todo
+
+export function toggleCompleted(todo) {
+    (todo.complete === false) ? todo.complete = true : todo.complete = false;
+}
+
+export function setTodoDueDate(todo, dateInputFromDOM) {
     const newDueDate = formatDueDate(dateInputFromDOM)
     todo.dueDate = newDueDate;
 }
 
-///Test parameters
-let partyProject = project.addProject("Party Time")
-let workProject = project.addProject("Work")
+export function increasePriority(todo) {
+    (todo.priorityLevel < 5) ? ++todo.priorityLevel : todo.priorityLevel = 5
+}
 
-let todo1 = todo.add("Todo title", "Todo description", 
-    "13/02/2021", 3, false, 
-    "partyProject")
-let todo2 = todo.add("Todo 2 title", "Todo description", 
-    "13/06/2020", 3, false, 
-    "workProject")
-let todo3 = todo.add("Todo 3 title", "Todo description", 
-    "13/12/2020", 2, false, 
-    "workProject")
-let todo4 = todo.add("Todo 4 title", "Todo description", 
-    "12/02/2023", 1, false, 
-    "partyProject")
-let todo5 = todo.add("Todo 5 title", "Todo description", 
-    "13/15/2020", 2, false, 
-    "workProject")
+export function decreasePriority(todo) {
+    (todo.priorityLevel > 1) ? --todo.priorityLevel : todo.priorityLevel = 1
+}
 
-addToProject(todo1, partyProject)
-addToProject(todo2, workProject)
-addToProject(todo3, workProject)
-addToProject(todo4, partyProject)
+export function setPriority(todo, newValue) {
+    todo.priorityLevel = parseInt(newValue)
+}
 
-const inputtedDate = "2020-02-24T20:07"
-console.log(todo3)
-setTodoDueDate(todo3, inputtedDate)
-console.log(formatDistanceToNow(todo3.dueDate))
+export function numStillToDo(project) {
+    const purifiedList = _.compact(project.todos)
+    let todosLeftToDo = 0
+    for (let i = 0; i < purifiedList.length; i++) {
+        if (purifiedList[i].complete === false) {
+            ++todosLeftToDo
+        } 
+    }
+    return todosLeftToDo
+}
+
+
+

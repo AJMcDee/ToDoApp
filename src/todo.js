@@ -6,7 +6,6 @@ export function add(title,description,dueDate,priorityLevel,complete, project) {
         dueDate,
         priorityLevel,
         complete,
-        project,
         projectIndex
     }
 }
