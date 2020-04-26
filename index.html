@@ -8,57 +8,92 @@
    <body>
      <main id="container">
        <div id="websitetitle">          <h1>Tell me what ToDo</h1></div>
-        <div id="contentcontainer">
-          <div id="projectcontainer">       
+       <div id="projectcontainer">       
+        <div id="projectsectiontitle">Select a Project</div>
 
-            <div class="project" id="exampleproject1"><h5>First Birthday Planning</h5><b>Next item due:</b><br> Around 5 Days</div>
-            <div class="project" id="exampleproject2"><h5>Work Assignments</h5><b>Next item due:</b><br> Next week</div>
-          </div>
+        <div class="project" id="exampleproject1">
+          <h5>First Birthday Planning</h5>
+          <b>Next item due:</b><br> 
+          <span id="proj1timeremaining">Around 5 Days</span></div>
+        <div class="project" id="exampleproject2">
+          <h5>Work Assignments</h5>
+          <b>Next item due:</b><br> 
+          <span id="proj1timeremaining">Next week</span></div>
+      </div>
+        <div id="contentcontainer">
+
 
           <div id="optionsandtodocontainer">
-
             <div id="optionsheader">
-              Sort by:  <select id="sort">
-                <option value="sortdue">Due date</option>
-                <option value="sortpriority">Priority: highest to lowest</option>
-                <option value="sortpriority">Priority: lowest to highest</option>
-              </select> 
-              
-              
-              
-              | Items completed: 3 
-              | Number of items left to do: 5 
-              | Switch to list view
+              <div id="projecttitle" class="project optionsitem">First Birthday Planning</div>
+              <div id="projectstats" class="optionsitem">
+                <div id="todoscompleted" class="optionsitem">Items completed: 3</div> | 
+                <div id="todosremaining" class="optionsitem">Number left to do: 5</div>
+              </div>
+              <div id="projectviewcontrols" class="optionsitem">
+                <div id="sortby" class="optionsitem">
+                  Sort by:  
+                  <select id="sort">
+                    <option value="sortdue">Due date</option>
+                    <option value="sortpriority">Priority: highest to lowest</option>
+                    <option value="sortpriority">Priority: lowest to highest</option>
+                  </select>
+                </div>
+                <div class="optionsitem"><a id="switchview">Switch to list view</a></div>
+              </div>
             </div>
 
             <div id="todocontainer">
               
               <div class="todo" id="exampletodo1">
-                <div class="todotitle">Arrange house maintenance</div>
-                <div class="tododescription">Ensure the plumber knows we're not available on Sundays</div>
-                <div class="tododuedate"><b>Due:</b> 4 July 2020</div>
-                <div class="priority"><b>Priority:</b><select id="priority">
-                  <option value="1" id="urgentchoice">Urgent</option>
-                  <option value="2">Very Important</option>
-                  <option value="3">Important</option>
-                  <option value="4">Preferred</option>
-                  <option value="5">Not Important</option>
-                </select></div>
-                <div class="complete"><input type="checkbox"><b>Complete?</b></input> | <a id="edittodo">Edit Details</a></div>
+                <div class="todotitle">
+                  Arrange house maintenance
+                </div>
+                <div class="tododescription">
+                  Ensure the plumber knows we're not available on Sundays
+                </div>
+                <div class="todosection tododuedate">
+                  <b>Due:</b> 4 July 2020, 17:00
+                </div>
+                <div class="todosection priority">
+                  <b>Priority:</b>
+                  <span class="todopriority">Urgent</span>
+                </div>
+                <div class="todosection configbox">
+                  <div><input type="checkbox"></input></div>
+                  <div id="donetext"><b>Done?</b></div>
+                  <div><button id="edittodo">Edit</button></div>
+                  <div><button id="deletetodo">Delete</button></div>
+                </div>
                 
               </div>
+
               <div class="todo" id="exampletodo2">
-                <div><input type="text" class="todotitle" value="Todo Edit" size="10"></input></div>
-                <div class="editdescription"><textarea>Ensure that the plumber knows we're not available on Sundays</textarea></p>
-                <div class="editduedate"><b>Due:</b> <input type="datetime-local" id="duedateinput"></input></div>
-                <div class="editpriority"><b>Priority:</b><select id="priority">
-                  <option value="1">Urgent</option>
-                  <option value="2">Very Important</option>
-                  <option value="3">Important</option>
-                  <option value="4">Preferred</option>
-                  <option value="5">Not Important</option>
-                </select></div>
-                <div><input type="checkbox"><b>Complete?</b></input> <button>Save Changes</button></div>
+                <div class="edittitle">
+                  <textarea class="todotitle">Arrange house maintenance</textarea>
+                </div>
+                <div class="tododescription editdescription">
+                  <textarea maxlength="90">Ensure that the plumber knows we're not available on Sundays</textarea>
+                </div>
+                <div class="todosection editduedate">
+                  <b>Due:</b> <input type="datetime-local" id="duedateinput"></input>
+                </div>
+                <div class="todosection editpriority">
+                  <b>Priority:</b>
+                  <select id="priority">
+                    <option value="1" id="urgentpriority">Urgent</option>
+                    <option value="2" id="vimppriority">Very Important</option>
+                    <option value="3" id="imppriority">Important</option>
+                    <option value="4" id="avpriority">Average</option>
+                    <option value="5" id="nimppriority">Not Important</option>
+                  </select>
+                </div>
+                <div class="todosection configbox">
+                  <div><input type="checkbox"></input></div>
+                  <div id="donetext"><b>Done?</b></div> |
+                  <div><button id="savetodo">Save</button></div> 
+                  <div><button id="deletetodo">Delete</button></div>
+                </div>
               </div>
               </div>
             </div>
