@@ -1,4 +1,4 @@
-import { formatDistanceToNow, toDate } from 'date-fns'
+import { formatDistanceToNow, toDate, closestTo, parseISO } from 'date-fns'
 import _ from 'lodash'
 import * as todo from './todo.js'
 import * as project from './project.js'
@@ -94,6 +94,22 @@ export function setPriority(todo, newValue) {
     todo.priorityLevel = parseInt(newValue)
 }
 
+
+// Get Statistics 
+
+export function getNearestDueDate(project) {
+    console.log(project)
+    const purifiedList = _.compact(project.todos)
+    let allDueDates = []
+    for (let i = 0; i < purifiedList.length; i++) {
+        allDueDates.push(parseISO(purifiedList[i].dueDate))
+    }
+    console.log(allDueDates)
+    const dateToCompare = new Date()
+    return closestTo(dateToCompare, allDueDates)
+}
+
+
 export function numStillToDo(project) {
     const purifiedList = _.compact(project.todos)
     let todosLeftToDo = 0
@@ -103,6 +119,17 @@ export function numStillToDo(project) {
         } 
     }
     return todosLeftToDo
+}
+
+export function numCompleted(project) {
+    const purifiedList = _.compact(project.todos)
+    let todosCompleted = 0
+    for (let i = 0; i < purifiedList.length; i++) {
+        if (purifiedList[i].complete === true) {
+            ++todosCompleted
+        } 
+    }
+    return todosCompleted
 }
 
 

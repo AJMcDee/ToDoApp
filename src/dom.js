@@ -12,6 +12,7 @@ import * as m from './mediator.js'
     const workProject = project.addProject("workProject", "Work");
     m.projectList.push(workProject)
 
+
     let todo1 = todo.add("Todo title", "Todo description", 
         "20210324T18:30", 3, false);
     let todo2 = todo.add("Todo 2 title", "Todo description", 
@@ -37,6 +38,9 @@ import * as m from './mediator.js'
     m.formatDueDate(todo4.dueDate)
     m.formatDueDate(todo5.dueDate)
 
+
+
+
 })();
 
 
@@ -45,15 +49,28 @@ const DOM = (() => {
     const todoContainer = document.getElementById("todocontainer")
     const todosCompleted = document.getElementById("todoscompleted")
     const todosRemaining = document.getElementById("todosremaining")
+    const projectContainer = document.getElementById("projectcontainer")
+    const testButton = document.getElementById("testbutton")
+
+    function projectObject(projectName) {
+        const projObj = m.projectList.find(proj => proj.id === projectName)
+        return projObj
+    }
 
     return {
         projectTitle,
         todosCompleted,
         todosRemaining,
-        todoContainer
+        todoContainer,
+        projectContainer,
+        testButton,
+        projectObject,
     }
 
 })();
+
+
+
 
 const priority = (() => {
     const getColor = function(priorityNumber) {
@@ -112,109 +129,27 @@ function clearTodos(){
     DOM.todoContainer.textContent="";
 }
 
-function clearProjectTitle(){
-    DOM.projectTitle.textContent="";
-}
-
-function clearStatistics(){
-    DOM.todosCompleted.textContent="";
-    DOM.todosRemaining.textContent="";
-}
-
-(function addProjectSelectListeners(){
+function addProjectSelectListeners(){
     const projectSelectors = document.getElementsByClassName("projectselector")
     for (let i = 0; i < projectSelectors.length; i++){
         const projectID = projectSelectors[i].id;
-        const projectName = m.projectList.find(project => project.id === projectID)
-
+        const projectName = DOM.projectObject(projectID)
 
         projectSelectors[i].style.cursor = "pointer";
         projectSelectors[i].addEventListener("click", e => {
+            updateProjectTitle(projectName)
+            updateTodosCompleted(projectName)
+            updateTodosRemaining(projectName)
             clearTodos()
             populateTodoContainer(projectName)
         })
     }
 
 
-})()
-
-
-
-function createTodoElement(todo){
-    const todoDiv = document.createElement("div")
-    todoDiv.classList = `todo ${todo}`
-    todoDiv.id = `${todo}container`
-
-    const todoTitle = document.createElement("div")
-    todoTitle.classList = `todotitle ${todo}`
-    todoTitle.id = `${todo}title`
-    todoTitle.textContent = todo.title
-    todoDiv.appendChild(todoTitle)
-
-    const todoDescription = document.createElement("div")
-    todoDescription.classList = `tododescription ${todo}`
-    todoDescription.id = `${todo}description`
-    todoDescription.textContent = todo.description
-    todoDiv.appendChild(todoDescription)
-
-    const todoDueDate = document.createElement("div")
-    todoDueDate.classList = `tododuedate ${todo} todosection`
-    todoDueDate.id = `${todo}duedate`
-    const dueDateForDOM = format(parseISO(todo.dueDate), 'dd MMM yyyy')
-    todoDueDate.innerHTML = `<b>Due:</b> ${dueDateForDOM}`
-    todoDiv.appendChild(todoDueDate)
-
-    const todoPriority = document.createElement("div")
-    todoPriority.classList = `priority ${todo} todosection`
-    todoPriority.id = `${todo}priority`
-    todoPriority.style.color = `${priority.getColor(todo.priorityLevel)}`
-    const priorityPhrase = priority.getWording(todo.priorityLevel)
-    todoPriority.innerHTML = `<b>Priority:</b> ${priorityPhrase}`
-    todoDiv.appendChild(todoPriority)
-
-    const configBox = document.createElement("div")
-    configBox.classList = `configbox ${todo} todosection`
-    configBox.id = `${todo}configbox`
-    todoDiv.appendChild(configBox)
-    
-    const markComplete = document.createElement("input")
-    markComplete.type = "checkbox"
-    markComplete.id = `${todo}checkbox`
-    setCheckbox(todo, markComplete)
-    configBox.appendChild(markComplete)
-
-    const doneText = document.createElement("div")
-    doneText.classList = "donetext"
-    doneText.innerHTML = `<b>Done?</b>`
-    configBox.appendChild(doneText)
-
-    const editButtonDiv = document.createElement("div")
-    configBox.appendChild(editButtonDiv)
-    const editButton = document.createElement("button")
-    editButton.classList = `editbutton ${todo}`
-    editButton.id = `${todo}edit`
-    editButton.textContent = "Edit";
-    editButtonDiv.appendChild(editButton)
-
-    const deleteButtonDiv = document.createElement("div")
-    configBox.appendChild(deleteButtonDiv)
-    const deleteButton = document.createElement("button")
-    deleteButton.classList = `deletebutton ${todo}`
-    deleteButton.id = `${todo}delete`
-    deleteButton.textContent = "Delete";
-    deleteButtonDiv.appendChild(deleteButton)
-
-    const saveButtonDiv = document.createElement("div")
-    configBox.appendChild(saveButtonDiv)
-    const saveButton = document.createElement("button")
-    saveButton.classList = `savebutton ${todo}`
-    saveButton.id = `${todo}save`
-    saveButton.textContent = "Save";
-    saveButton.style.display = "none";
-    saveButtonDiv.appendChild(saveButton)
-
-    DOM.todoContainer.appendChild(todoDiv)
 }
+
+
+
 
 function setCheckbox(todo, checkbox) {
     (todo.complete === true) ? checkbox.checked = true: checkbox.checked = false; 
@@ -229,6 +164,17 @@ function addTodoOnclicks(todo) {
 
 }
 
+function updateProjectTitle(projectName) {
+    DOM.projectTitle.textContent = projectName.title
+}
+
+function updateTodosCompleted(projectName) {
+    DOM.todosCompleted.textContent = m.numCompleted(projectName)
+}
+
+function updateTodosRemaining(projectName) {
+    DOM.todosRemaining.textContent = m.numStillToDo(projectName)
+}
 
 function populateTodoContainer(projectName){
     projectName.todos.forEach(todo => {
@@ -236,11 +182,147 @@ function populateTodoContainer(projectName){
     });
 }
 
+function clearProjectContainer() {
+    DOM.projectContainer.innerHTML = "";
+}
+
+function populateProjectContainer(){
+    m.projectList.forEach(project => {
+        createProjectElement(project)
+    });
+    createNewProjButton()
+
+}
+
+function createNewProjButton(){
+    const newDiv = document.createElement("div")
+    newDiv.innerHTML = `<span id="newprojectplus">+</span><br>
+    <b>Add New Project</b><br>`
+    newDiv.classList = "project"
+    newDiv.id = "addnewproject"
+    DOM.projectContainer.appendChild(newDiv)
+}
+
+
+
+
+
+function createTodoElement(todo){
+
+    const todoIndex = `todo${todo.projectIndex}`
+    const todoDiv = document.createElement("div")
+    todoDiv.classList = `todo ${todoIndex}`
+    todoDiv.id = `${todoIndex}container`
+
+    const todoTitle = document.createElement("div")
+    todoTitle.classList = `todotitle ${todoIndex}`
+    todoTitle.id = `${todoIndex}title`
+    todoTitle.textContent = todo.title
+    todoDiv.appendChild(todoTitle)
+
+    const todoDescription = document.createElement("div")
+    todoDescription.classList = `tododescription ${todoIndex}`
+    todoDescription.id = `${todoIndex}description`
+    todoDescription.textContent = todo.description
+    todoDiv.appendChild(todoDescription)
+
+    const todoDueDate = document.createElement("div")
+    todoDueDate.classList = `tododuedate ${todoIndex} todosection`
+    todoDueDate.id = `${todoIndex}duedate`
+    const dueDateForDOM = format(parseISO(todo.dueDate), 'dd MMM yyyy')
+    todoDueDate.innerHTML = `<b>Due:</b> ${dueDateForDOM}`
+    todoDiv.appendChild(todoDueDate)
+
+    const todoPriority = document.createElement("div")
+    todoPriority.classList = `priority ${todoIndex} todosection`
+    todoPriority.id = `${todoIndex}priority`
+    todoPriority.style.color = `${priority.getColor(todo.priorityLevel)}`
+    const priorityPhrase = priority.getWording(todo.priorityLevel)
+    todoPriority.innerHTML = `<b>Priority:</b> ${priorityPhrase}`
+    todoDiv.appendChild(todoPriority)
+
+    const configBox = document.createElement("div")
+    configBox.classList = `configbox ${todoIndex} todosection`
+    configBox.id = `${todoIndex}configbox`
+    todoDiv.appendChild(configBox)
+    
+    const markComplete = document.createElement("input")
+    markComplete.type = "checkbox"
+    markComplete.id = `${todoIndex}checkbox`
+    setCheckbox(todo, markComplete)
+    configBox.appendChild(markComplete)
+
+    const doneText = document.createElement("div")
+    doneText.classList = "donetext"
+    doneText.innerHTML = `<b>Done?</b>`
+    configBox.appendChild(doneText)
+
+    const editButtonDiv = document.createElement("div")
+    configBox.appendChild(editButtonDiv)
+    const editButton = document.createElement("button")
+    editButton.classList = `editbutton ${todoIndex}`
+    editButton.id = `${todoIndex}edit`
+    editButton.textContent = "Edit";
+    editButtonDiv.appendChild(editButton)
+
+    const deleteButtonDiv = document.createElement("div")
+    configBox.appendChild(deleteButtonDiv)
+    const deleteButton = document.createElement("button")
+    deleteButton.classList = `deletebutton ${todoIndex}`
+    deleteButton.id = `${todoIndex}delete`
+    deleteButton.textContent = "Delete";
+    deleteButtonDiv.appendChild(deleteButton)
+
+    const saveButtonDiv = document.createElement("div")
+    configBox.appendChild(saveButtonDiv)
+    const saveButton = document.createElement("button")
+    saveButton.classList = `savebutton ${todoIndex}`
+    saveButton.id = `${todoIndex}save`
+    saveButton.textContent = "Save";
+    saveButton.style.display = "none";
+    saveButtonDiv.appendChild(saveButton)
+
+    DOM.todoContainer.appendChild(todoDiv)
+}
+
+
+
+function createProjectElement(projectName){
+    const projDiv = document.createElement("div")
+    projDiv.classList = `project projectselector`
+    projDiv.id = `${projectName.id}`
+
+    const projTitle = document.createElement("h5")
+    projTitle.textContent = `${projectName.title}`
+    projDiv.appendChild(projTitle)
+
+    
+
+    const projTimeRemaining = document.createElement("span")
+    const nearestDate = m.getNearestDueDate(projectName)
+    const nearestTodo = formatDistanceToNow(nearestDate)
+    projTimeRemaining.innerHTML = `<b>Next item due:</b><br> 
+    ${nearestTodo}`
+    projDiv.appendChild(projTimeRemaining)
+
+    DOM.projectContainer.appendChild(projDiv)
+
+}
 
 
 
 /// TEST FUNCTIONS
+clearProjectContainer()
+populateProjectContainer()
+addProjectSelectListeners()
+updateProjectTitle(DOM.projectObject("workProject"))
+updateTodosCompleted(DOM.projectObject("workProject"))
+updateTodosRemaining(DOM.projectObject("workProject"))
+populateTodoContainer(DOM.projectObject("workProject"))
 
-populateTodoContainer(m.projectList[0])
+DOM.testButton.addEventListener("click", e => {
+    clearProjectContainer();
+    populateProjectContainer();
+    addProjectSelectListeners();
+})
 
-console.log(m.projectList)
