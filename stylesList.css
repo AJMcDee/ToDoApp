@@ -1,208 +1,43 @@
-/* COLOUR PALETTE:
-white: #ECF8F8
-off-white:  #EEE4E1
-almond: #E7D8C9
-pink: #E6BEAE
-camel:  #B2967D 
-black: #272838*/
-body {
-    background-color: #EEE4E1;
-    color: #272838;
-}
-a {
-    text-decoration: underline;
-    font-weight: bold;
-}
-body div{
-
-    /* border: 1px solid black; */
-}
-
-h5 {
-    font-size: 18px;
-    margin-block-start: 0;
-    margin-block-end: 0;
-}
-
-#websitetitle {
-    text-align: center;
-
-}
-
-#container {
-    background-color: #ECF8F8;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-}
-
-#contentcontainer {
-    display: flex;
-    flex-direction: row;
-}
-
-#projectcontainer {
-    display: flex;
-    flex-direction: row;
-    border: 1px solid grey;
-    justify-content: center;
-    align-items: center;
-
-    width: 100%;
-}
-
-#optionsandtodocontainer {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    padding: 0px 50px 50px 50px;
-}
-
-#optionsheader {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 15px;
-    text-align: center;
-}
-
-.optionsitem {
-    padding: 3px 5px 2px 5px;
-}
-
-.project {
-    border: 1px solid black;
-    padding: 10px;
-    margin: 15px;
-    border-radius: 10%;
-    text-align: center;
-    background-color: #E6BEAE;
-    box-shadow: 2px 2px 2px grey;
-    font-size: 14px;
 
 }
 
 #todocontainer {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+
+
+    /* LISTSTYLE EDIT Changed to column */
+    flex-direction: column; 
+
 }
 
 .todo {
-    background-color: #E7D8C9;
-    border: 2px solid black;
-    padding: 10px;
-    margin: 10px;
-    flex-basis: 180px;
-    border-radius: 10%;
-    box-shadow: 2px 2px 2px grey;
+ 
 
-    display: flex;
-    flex-direction: column;
+    /* LISTSTYLE EDIT Changed to row */
+    flex-direction: row;
+
+    /* LISTSTYLE EDIT Removed flex-basis */
+    flex-basis: ;
+
+    /* LISTSTYLE EDIT Added alignment */
+    align-items: center;
+
 
 
 }
 
-button, input, select, textarea {
-    font-family: inherit;
-    font-size: 100%;
-    border-radius: 10px;
-  }
 
+/* LISTSTYLE EDIT Remove most styling on title, add bold, add width */
 .todotitle {
-    font-size: 25px;
-    flex: 2 1 20%;
-    padding: 15px 5px 5px 5px;
+    font-size: inherit;
+    font-weight: bold;
+    width: 180px;
 }
 
-.tododescription {
-    flex: 3 1 50%;
-    padding: 15px 5px 5px 5px;
-}
 
+/* LISTSTYLE EDIT Remove font size */
 .edittitle textarea {
     width: 180px;
-    font-size: 30px;
+    /* font-size: 30px; */
     resize: none;
 }
 
-.todosection {
-    flex: 1 1 10%;
-    padding: 5px
-}
-
-.priority {
-    color: #D95D39;
-    font-weight: bold;
-}
-
-#urgentpriority {
-    background-color: #D95D39;
-}
-
-#vimppriority {
-    background-color: #DC965A;
-}
-
-#imppriority {
-    background-color: #FFE98C;
-}
-
-#avpriority {
-    background-color: #95AFBA;
-}
-
-#nimppriority {
-    background-color: #BDC893;
-}
-
-#projectsectiontitle {
-    font-size: 25px;
-    padding: 10px;
-    text-align: center;
-}
-
-
-#duedateinput {
-    width: 150px;
-    font-size: 80%;
-}
-
-.editdescription {
-   justify-self: start;
-   width: 95%;
-   flex-grow: 2;
-}
-
-.editdescription textarea {
-    width: 150;
-    height: 80px;
-    resize: none;
-}
-
-.configbox {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    
-}
-
-#donetext {
-    justify-self: flex-start;
-}
-
-#projecttitle {
-    font-size: 25px;
-    width: 100%;
-    border-radius: 20%;
-}
-
-#projectstats {
-    display: flex;
-}
-
-#projectviewcontrols {
-    display: flex;
-}

@@ -11,14 +11,20 @@
        <div id="projectcontainer">       
         <div id="projectsectiontitle">Select a Project</div>
 
-        <div class="project" id="exampleproject1">
+        <div class="project projectselector" id="partyProject">
           <h5>First Birthday Planning</h5>
           <b>Next item due:</b><br> 
-          <span id="proj1timeremaining">Around 5 Days</span></div>
-        <div class="project" id="exampleproject2">
+          <span id="proj1timeremaining">Around 5 Days</span>
+        </div>
+        <div class="project projectselector" id="workProject">
           <h5>Work Assignments</h5>
           <b>Next item due:</b><br> 
-          <span id="proj1timeremaining">Next week</span></div>
+          <span id="proj1timeremaining">Next week</span>
+        </div>
+        <div class="project" id="addnewproject">
+          <span id="newprojectplus">+</span><br>
+          <b>Add New Project</b><br> 
+        </div>
       </div>
         <div id="contentcontainer">
 
@@ -27,8 +33,14 @@
             <div id="optionsheader">
               <div id="projecttitle" class="project optionsitem">First Birthday Planning</div>
               <div id="projectstats" class="optionsitem">
-                <div id="todoscompleted" class="optionsitem">Items completed: 3</div> | 
-                <div id="todosremaining" class="optionsitem">Number left to do: 5</div>
+                <div class="optionsitem">
+                  Items completed: 
+                  <span id="todoscompleted">3</span>
+                </div> | 
+                <div class="optionsitem">
+                  Number left to do: 
+                  <span id="todosremaining">5</span>
+                </div>
               </div>
               <div id="projectviewcontrols" class="optionsitem">
                 <div id="sortby" class="optionsitem">
@@ -60,7 +72,7 @@
                   <span class="todopriority">Urgent</span>
                 </div>
                 <div class="todosection configbox">
-                  <div><input type="checkbox"></input></div>
+                  <div><input type="checkbox" id="markcomplete"></input></div>
                   <div id="donetext"><b>Done?</b></div>
                   <div><button id="edittodo">Edit</button></div>
                   <div><button id="deletetodo">Delete</button></div>
@@ -90,7 +102,7 @@
                 </div>
                 <div class="todosection configbox">
                   <div><input type="checkbox"></input></div>
-                  <div id="donetext"><b>Done?</b></div> |
+                  <div id="donetext"><b>Done?</b></div> 
                   <div><button id="savetodo">Save</button></div> 
                   <div><button id="deletetodo">Delete</button></div>
                 </div>
