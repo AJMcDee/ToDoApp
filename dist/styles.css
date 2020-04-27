@@ -49,6 +49,17 @@ h5 {
     width: 100%;
 }
 
+
+
+#newprojectplus {
+    font-size: 50px;
+    line-height: 50px;
+}
+
+#addnewproject {
+    padding-top: 0px;
+}
+
 #optionsandtodocontainer {
     display: flex;
     flex-direction: column;
@@ -105,12 +116,14 @@ button, input, select, textarea {
     border: 2px solid black;
     padding: 10px;
     margin: 10px;
-    flex-basis: 180px;
+    flex-basis: 200px;
     border-radius: 10%;
     box-shadow: 2px 2px 2px grey;
 
     display: flex;
     flex-direction: column;
+    justify-self: stretch;
+    align-self: stretch;
 
 
 }
@@ -140,6 +153,10 @@ button, input, select, textarea {
 .priority {
     color: #D95D39;
     font-weight: bold;
+    text-shadow: -1px 1px 2px #000,
+    1px 1px 2px #000,
+    1px -1px 0 #000,
+    -1px -1px 0 #000;
 }
 
 #urgentpriority {
