@@ -3,6 +3,13 @@ import _ from 'lodash'
 import * as todo from './todo.js'
 import * as project from './project.js'
 
+// Create project and add it to global array
+export const projectList = []
+
+
+
+
+
 // Add, remove, and change todos between projects
 
 export function addToProject(newTodo, projectName){
