@@ -159,6 +159,7 @@ button, input, select, textarea {
     -1px -1px 0 #000;
 }
 
+
 #urgentpriority {
     background-color: #D95D39;
 }
@@ -185,6 +186,10 @@ button, input, select, textarea {
     text-align: center;
 }
 
+#newprojectitle {
+    padding: 4px;
+    margin: 5px;
+}
 
 #duedateinput {
     width: 150px;
