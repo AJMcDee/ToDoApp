@@ -67,6 +67,11 @@ h5 {
     padding: 0px 50px 50px 50px;
 }
 
+#todoplus {
+    font-size: 70px;
+    margin: auto;
+}
+
 #optionsheader {
     display: flex;
     flex-direction: column;
@@ -75,6 +80,11 @@ h5 {
     text-align: center;
 }
 
+#todoaddcontainer {
+    align-items: center;
+    justify-items: center;
+
+}
 .optionsitem {
     padding: 3px 5px 2px 5px;
 }

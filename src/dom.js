@@ -112,6 +112,8 @@ function createProjectAddForm() {
 
 }
 
+
+
 function toggleProjectAddView() {
 
     if (DOM.projectAddForm.style.display === "none") {
@@ -232,6 +234,7 @@ function populateTodoContainer(projectName){
     projectName.todos.forEach(todo => {
         createTodoElement(todo)
     });
+    createTodoAdd()
 }
 
 function clearProjectContainer() {
@@ -252,10 +255,10 @@ function populateProjectContainer(){
 
 function createNewProjButton(){
     const newDiv = document.createElement("div")
-    newDiv.innerHTML = `<span id="newprojectplus">+</span><br>
-    <b>Add New Project</b><br>`
+    newDiv.innerHTML = `<span id="newprojectplus">+</span><br>`
     newDiv.classList = "project"
     newDiv.id = "addnewproject"
+    newDiv.style.cursor = "pointer"
     newDiv.addEventListener("click", function() {
         toggleProjectAddView()
     })
@@ -346,6 +349,21 @@ function createTodoElement(todo){
     DOM.todoContainer.appendChild(todoDiv)
 }
 
+function createTodoAdd(){
+        const todoDiv = document.createElement("div")
+        todoDiv.classList = `todo`
+        todoDiv.id = `todoaddcontainer`
+        todoDiv.height = todoDiv.width
+    
+        const todoPlus = document.createElement("div")
+        todoPlus.id = `todoplus`
+        todoPlus.textContent = "+"
+        todoDiv.appendChild(todoPlus)
+    
+        DOM.todoContainer.insertAdjacentElement("beforeend", todoDiv)
+    
+}
+
 
 
 
@@ -353,11 +371,14 @@ function addDeleteIconDiv(parentElement, projectID) {
     const iconDiv = document.createElement("div")
     iconDiv.id = `delete${projectID}`
     iconDiv.addEventListener("click", function() {
-        DOM.projectTitle.innerHTML = "Please Select a Project"
-        clearTodos()
-        m.removeProject(projectID)
-        clearProjectContainer()
-        populateProjectContainer()
+        let proceed = confirm("Are you sure you want to delete this project? This operation cannot be reversed.")
+        if (proceed === true) {
+            DOM.projectTitle.innerHTML = "Please Select a Project"
+            clearTodos()
+            m.removeProject(projectID)
+            clearProjectContainer()
+            populateProjectContainer()
+        }
 
 
     })
