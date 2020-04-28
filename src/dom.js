@@ -193,11 +193,7 @@ function addProjectSelectListeners(){
 
         projectSelectors[i].style.cursor = "pointer";
         projectSelectors[i].addEventListener("click", e => {
-            updateProjectTitle(projectName)
-            updateTodosCompleted(projectName)
-            updateTodosRemaining(projectName)
-            clearTodos()
-            populateTodoContainer(projectName)
+
         })
     }
 
@@ -244,7 +240,9 @@ function clearProjectContainer() {
 
 function populateProjectContainer(){
     m.projectList.forEach(project => {
+        if (project != null) {
         createProjectElement(project)
+        }
     });
     createNewProjButton()
     createProjectAddForm()
@@ -350,6 +348,31 @@ function createTodoElement(todo){
 
 
 
+
+function addDeleteIconDiv(parentElement, projectID) {
+    const iconDiv = document.createElement("div")
+    iconDiv.id = `delete${projectID}`
+    iconDiv.addEventListener("click", function() {
+        DOM.projectTitle.innerHTML = "Please Select a Project"
+        clearTodos()
+        m.removeProject(projectID)
+        clearProjectContainer()
+        populateProjectContainer()
+
+
+    })
+
+    const icon = document.createElement("img")
+    icon.src = "images/delete.png"
+    iconDiv.appendChild(icon)
+    icon.width = "20"
+    icon.height = "20"
+
+    parentElement.appendChild(iconDiv)
+
+}
+
+
 function createProjectElement(projectName){
     const projDiv = document.createElement("div")
     projDiv.classList = `project projectselector`
@@ -357,12 +380,20 @@ function createProjectElement(projectName){
 
     const projTitle = document.createElement("h5")
     projTitle.textContent = `${projectName.title}`
+    projTitle.style.cursor = "pointer";
+    projTitle.addEventListener("click", function() {
+        updateProjectTitle(projectName)
+        updateTodosCompleted(projectName)
+        updateTodosRemaining(projectName)
+        clearTodos()
+        populateTodoContainer(projectName)
+    })
     projDiv.appendChild(projTitle)
 
 
     const projTimeRemaining = document.createElement("span")
 
-    if (!projectName.dueDate) {
+    if (projectName.todos.length === 0) {
         projTimeRemaining.innerHTML = `<b>No Items Due</b><br>` 
     } else {
         const nearestDate = m.getNearestDueDate(projectName)
@@ -372,6 +403,9 @@ function createProjectElement(projectName){
     }
 
     projDiv.appendChild(projTimeRemaining)
+
+    addDeleteIconDiv(projDiv, projectName.id)
+
 
     DOM.projectContainer.appendChild(projDiv)
 
@@ -383,12 +417,8 @@ function createProjectElement(projectName){
 
 clearProjectContainer()
 populateProjectContainer()
-updateProjectTitle(DOM.projectObject("workProject"))
-updateTodosCompleted(DOM.projectObject("workProject"))
-updateTodosRemaining(DOM.projectObject("workProject"))
-populateTodoContainer(DOM.projectObject("workProject"))
 
 DOM.testButton.addEventListener("click", e => {
-    toggleProjectAddView()
+    DOM.projectTitle.innerHTML = "Please Select a Project"
 })
 

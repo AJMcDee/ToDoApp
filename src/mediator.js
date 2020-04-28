@@ -6,6 +6,11 @@ import * as project from './project.js'
 // Create project and add it to global array
 export const projectList = []
 
+export function removeProject(projectID) {
+    const projIndex = projectID.slice(7)
+    projectList[projIndex] = null
+}
+
 
 // Add, remove, and change todos between projects
 
