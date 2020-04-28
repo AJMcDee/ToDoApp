@@ -7,9 +7,6 @@ import * as project from './project.js'
 export const projectList = []
 
 
-
-
-
 // Add, remove, and change todos between projects
 
 export function addToProject(newTodo, projectName){
@@ -98,13 +95,11 @@ export function setPriority(todo, newValue) {
 // Get Statistics 
 
 export function getNearestDueDate(project) {
-    console.log(project)
     const purifiedList = _.compact(project.todos)
     let allDueDates = []
     for (let i = 0; i < purifiedList.length; i++) {
         allDueDates.push(parseISO(purifiedList[i].dueDate))
     }
-    console.log(allDueDates)
     const dateToCompare = new Date()
     return closestTo(dateToCompare, allDueDates)
 }

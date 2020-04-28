@@ -39,9 +39,8 @@ import * as m from './mediator.js'
     m.formatDueDate(todo5.dueDate)
 
 
-
-
 })();
+
 
 
 const DOM = (() => {
@@ -51,11 +50,15 @@ const DOM = (() => {
     const todosRemaining = document.getElementById("todosremaining")
     const projectContainer = document.getElementById("projectcontainer")
     const testButton = document.getElementById("testbutton")
+    let addNewProjectButton
+    let projectAddForm
 
     function projectObject(projectName) {
         const projObj = m.projectList.find(proj => proj.id === projectName)
         return projObj
     }
+
+
 
     return {
         projectTitle,
@@ -65,9 +68,62 @@ const DOM = (() => {
         projectContainer,
         testButton,
         projectObject,
+        addNewProjectButton,
+        projectAddForm,
     }
 
 })();
+
+function DOMupdate(){
+    DOM.addNewProjectButton = document.getElementById("addnewproject")
+    DOM.projectAddForm = document.getElementById("projectaddform")
+}
+
+function createProjectAddForm() {
+    const newDiv = document.createElement("div")
+    newDiv.classList = "project"
+    newDiv.id = "projectaddform"
+    newDiv.style.display = "none"
+
+    const newProjectTitleEntry = document.createElement("input")
+    newProjectTitleEntry.type = "text"
+    newProjectTitleEntry.id = "newprojecttitle"
+    newProjectTitleEntry.placeholder = "Project Title"
+    newDiv.appendChild(newProjectTitleEntry)
+
+    const newBr = document.createElement("p")
+    newDiv.appendChild(newBr)
+
+    const newProjectAdd = document.createElement("button")
+    newProjectAdd.id = "newprojectadd"
+    newProjectAdd.textContent = "Add"
+    newProjectAdd.addEventListener("click", function() {
+        const newProj = project.addProject(`title`, `${newProjectTitleEntry.value}`);
+        newProj.id = "project" + (m.projectList.length);
+        m.projectList.push(newProj)
+        clearProjectContainer()
+        populateProjectContainer()
+        console.log(m.projectList)
+    })
+    newBr.appendChild(newProjectAdd)
+
+
+    DOM.projectContainer.appendChild(newDiv)
+
+}
+
+function toggleProjectAddView() {
+
+    if (DOM.projectAddForm.style.display === "none") {
+        DOM.projectAddForm.style.display = "inherit"
+        DOM.addNewProjectButton.style.display = "none"
+    } else {
+        DOM.addNewProjectButton.style.display = "inline"
+        DOM.projectAddForm.style.display = "none"
+    }
+}
+
+
 
 
 
@@ -191,7 +247,9 @@ function populateProjectContainer(){
         createProjectElement(project)
     });
     createNewProjButton()
-
+    createProjectAddForm()
+    DOMupdate()
+    addProjectSelectListeners()
 }
 
 function createNewProjButton(){
@@ -200,6 +258,11 @@ function createNewProjButton(){
     <b>Add New Project</b><br>`
     newDiv.classList = "project"
     newDiv.id = "addnewproject"
+    newDiv.addEventListener("click", function() {
+        toggleProjectAddView()
+    })
+
+
     DOM.projectContainer.appendChild(newDiv)
 }
 
@@ -296,13 +359,18 @@ function createProjectElement(projectName){
     projTitle.textContent = `${projectName.title}`
     projDiv.appendChild(projTitle)
 
-    
 
     const projTimeRemaining = document.createElement("span")
-    const nearestDate = m.getNearestDueDate(projectName)
-    const nearestTodo = formatDistanceToNow(nearestDate)
-    projTimeRemaining.innerHTML = `<b>Next item due:</b><br> 
-    ${nearestTodo}`
+
+    if (!projectName.dueDate) {
+        projTimeRemaining.innerHTML = `<b>No Items Due</b><br>` 
+    } else {
+        const nearestDate = m.getNearestDueDate(projectName)
+        const nearestTodo = formatDistanceToNow(nearestDate)
+        projTimeRemaining.innerHTML = `<b>Next item due:</b><br> 
+        ${nearestTodo}`
+    }
+
     projDiv.appendChild(projTimeRemaining)
 
     DOM.projectContainer.appendChild(projDiv)
@@ -312,17 +380,15 @@ function createProjectElement(projectName){
 
 
 /// TEST FUNCTIONS
+
 clearProjectContainer()
 populateProjectContainer()
-addProjectSelectListeners()
 updateProjectTitle(DOM.projectObject("workProject"))
 updateTodosCompleted(DOM.projectObject("workProject"))
 updateTodosRemaining(DOM.projectObject("workProject"))
 populateTodoContainer(DOM.projectObject("workProject"))
 
 DOM.testButton.addEventListener("click", e => {
-    clearProjectContainer();
-    populateProjectContainer();
-    addProjectSelectListeners();
+    toggleProjectAddView()
 })
 
