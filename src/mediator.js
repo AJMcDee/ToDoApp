@@ -46,20 +46,20 @@ function getYearDue(dateInputFromDOM) {
 }
 
 function getMonthDue(dateInputFromDOM) {
-    return dateInputFromDOM.slice(4,6)
+    return dateInputFromDOM.slice(5,7)
 }
 
 function getDayDue(dateInputFromDOM) {
-    return dateInputFromDOM.slice(6,8)
+    return dateInputFromDOM.slice(8,10)
 
 }
 
 function getHourDue(dateInputFromDOM) {
-    return dateInputFromDOM.slice(9,11)
+    return dateInputFromDOM.slice(11,13)
 }
 
 function getMinuteDue(dateInputFromDOM) {
-    return dateInputFromDOM.slice(12,14)
+    return dateInputFromDOM.slice(14,16)
 }
 
 export function formatDueDate(dateInputFromDOM) {
@@ -68,6 +68,7 @@ export function formatDueDate(dateInputFromDOM) {
     const day = getDayDue(dateInputFromDOM)
     const hour = getHourDue(dateInputFromDOM)
     const min = getMinuteDue(dateInputFromDOM)
+    console.log(year,month,day,hour,min)
     let newDueDate = toDate(new Date(year, month, day, hour, min))
     return newDueDate 
 }

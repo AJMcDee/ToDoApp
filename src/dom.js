@@ -3,239 +3,12 @@ import _ from 'lodash'
 import * as todo from './todo.js'
 import * as project from './project.js'
 import * as m from './mediator.js'
-
-///Test parameters
-(function loadExampleTodos(){
-    const partyProject = project.addProject("partyProject", "Party Time");
-    m.projectList.push(partyProject)
-
-    const workProject = project.addProject("workProject", "Work");
-    m.projectList.push(workProject)
-
-
-    let todo1 = todo.add("Todo title", "Todo description", 
-        "20210324T18:30", 3, false);
-    let todo2 = todo.add("Todo 2 title", "Todo description", 
-        "20200624T18:30", 3, true);
-    let todo3 = todo.add("Todo 3 title", "Todo description", 
-        "20200922T18:30", 2, false);
-    let todo4 = todo.add("Todo 4 title", "Todo description", 
-        "20200430T18:30", 1, false);
-    let todo5 = todo.add("Todo 5 title", "Todo description", 
-        "20200429T18:30", 2, false);
-
-    
-    m.addToProject(todo1, partyProject)
-    m.addToProject(todo2, workProject)
-    m.addToProject(todo3, workProject)
-    m.addToProject(todo4, partyProject)
-    m.addToProject(todo5, workProject)
-
-
-    m.formatDueDate(todo1.dueDate)
-    m.formatDueDate(todo2.dueDate)
-    m.formatDueDate(todo3.dueDate)
-    m.formatDueDate(todo4.dueDate)
-    m.formatDueDate(todo5.dueDate)
-
-
-})();
+import * as onload from './iife.js'
+import * as DOM from './domselectors.js'
 
 
 
-const DOM = (() => {
-    const projectTitle = document.getElementById("projecttitle")
-    const todoContainer = document.getElementById("todocontainer")
-    const todosCompleted = document.getElementById("todoscompleted")
-    const todosRemaining = document.getElementById("todosremaining")
-    const projectContainer = document.getElementById("projectcontainer")
-    const testButton = document.getElementById("testbutton")
-    let addNewProjectButton
-    let projectAddForm
-
-    function projectObject(projectName) {
-        const projObj = m.projectList.find(proj => proj.id === projectName)
-        return projObj
-    }
-
-
-
-    return {
-        projectTitle,
-        todosCompleted,
-        todosRemaining,
-        todoContainer,
-        projectContainer,
-        testButton,
-        projectObject,
-        addNewProjectButton,
-        projectAddForm,
-    }
-
-})();
-
-function DOMupdate(){
-    DOM.addNewProjectButton = document.getElementById("addnewproject")
-    DOM.projectAddForm = document.getElementById("projectaddform")
-}
-
-function createProjectAddForm() {
-    const newDiv = document.createElement("div")
-    newDiv.classList = "project"
-    newDiv.id = "projectaddform"
-    newDiv.style.display = "none"
-
-    const newProjectTitleEntry = document.createElement("input")
-    newProjectTitleEntry.type = "text"
-    newProjectTitleEntry.id = "newprojecttitle"
-    newProjectTitleEntry.placeholder = "Project Title"
-    newDiv.appendChild(newProjectTitleEntry)
-
-    const newBr = document.createElement("p")
-    newDiv.appendChild(newBr)
-
-    const newProjectAdd = document.createElement("button")
-    newProjectAdd.id = "newprojectadd"
-    newProjectAdd.textContent = "Add"
-    newProjectAdd.addEventListener("click", function() {
-        const newProj = project.addProject(`title`, `${newProjectTitleEntry.value}`);
-        newProj.id = "project" + (m.projectList.length);
-        m.projectList.push(newProj)
-        clearProjectContainer()
-        populateProjectContainer()
-        console.log(m.projectList)
-    })
-    newBr.appendChild(newProjectAdd)
-
-
-    DOM.projectContainer.appendChild(newDiv)
-
-}
-
-
-
-function toggleProjectAddView() {
-
-    if (DOM.projectAddForm.style.display === "none") {
-        DOM.projectAddForm.style.display = "inherit"
-        DOM.addNewProjectButton.style.display = "none"
-    } else {
-        DOM.addNewProjectButton.style.display = "inline"
-        DOM.projectAddForm.style.display = "none"
-    }
-}
-
-
-
-
-
-
-const priority = (() => {
-    const getColor = function(priorityNumber) {
-        switch (priorityNumber) {
-            case 1:
-                return '#D95D39'
-                break;
-            case 2:
-                return '#DC965A'
-                break;
-            case 3:
-                return '#FFE98C'
-                break;
-            case 4:
-                return '#95AFBA'
-                break;
-            case 5:
-                return '#BDC893'
-                break;
-                                            
-            default:
-                break;
-        }
-    }
-
-    function getWording(priorityNumber) {
-        switch (priorityNumber) {
-            case 1:
-                return 'Urgent'
-                break;
-            case 2:
-                return 'Very Important'
-                break;
-            case 3:
-                return 'Important'
-                break;
-            case 4:
-                return 'Average'
-                break;
-            case 5:
-                return 'Not Important'
-                break;
-                                            
-            default:
-                break;
-        }
-    }
-
-    return {
-        getColor,
-        getWording
-    }
-})();
-
-function clearTodos(){
-    DOM.todoContainer.textContent="";
-}
-
-function addProjectSelectListeners(){
-    const projectSelectors = document.getElementsByClassName("projectselector")
-    for (let i = 0; i < projectSelectors.length; i++){
-        const projectID = projectSelectors[i].id;
-        const projectName = DOM.projectObject(projectID)
-
-        projectSelectors[i].style.cursor = "pointer";
-        projectSelectors[i].addEventListener("click", e => {
-
-        })
-    }
-
-
-}
-
-
-
-
-function setCheckbox(todo, checkbox) {
-    (todo.complete === true) ? checkbox.checked = true: checkbox.checked = false; 
-}
-
-function addTodoOnclicks(todo) {
-    const markComplete = document.getElementById(`${todo}checkbox`)
-    const editButton = document.getElementById(`${todo}edit`)
-    const deleteButton = document.getElementById(`${todo}delete`)
-    const saveButton = document.getElementById(`${todo}save`)
-
-
-}
-
-function updateProjectTitle(projectName) {
-    DOM.projectTitle.textContent = projectName.title
-}
-
-function updateTodosCompleted(projectName) {
-    DOM.todosCompleted.textContent = m.numCompleted(projectName)
-}
-
-function updateTodosRemaining(projectName) {
-    DOM.todosRemaining.textContent = m.numStillToDo(projectName)
-}
-
-function populateTodoContainer(projectName){
-    projectName.todos.forEach(todo => {
-        createTodoElement(todo)
-    });
-    createTodoAdd()
-}
+/// Project functions 
 
 function clearProjectContainer() {
     DOM.projectContainer.innerHTML = "";
@@ -250,7 +23,153 @@ function populateProjectContainer(){
     createNewProjButton()
     createProjectAddForm()
     DOMupdate()
-    addProjectSelectListeners()
+}
+
+function toggleProjectAddView() {
+
+    if (DOM.projectAddForm.style.display === "none") {
+        DOM.projectAddForm.style.display = "inline"
+        DOM.addNewProjectButton.style.display = "none"
+    } else {
+        DOM.addNewProjectButton.style.display = "inline"
+        DOM.projectAddForm.style.display = "none"
+    }
+}
+
+function updateProjectTitle(projectName) {
+    DOM.projectTitle.textContent = projectName.title
+}
+
+
+
+
+/// Todo functions
+
+
+function clearTodos(){
+    DOM.todoContainer.textContent="";
+}
+
+function updateTodosCompleted(projectName) {
+    DOM.todosCompleted.textContent = m.numCompleted(projectName)
+}
+
+function updateTodosRemaining(projectName) {
+    DOM.todosRemaining.textContent = m.numStillToDo(projectName)
+}
+
+function populateTodoContainer(project){
+
+    project.todos.forEach(todo => {
+        createTodoElement(todo)
+    });
+    createNewTodoButton(project)
+    createTodoAddForm(project)
+}
+
+function toggleTodoAddView() {
+
+    if (DOM.todoAddForm.style.display === "none") {
+        DOM.todoAddForm.style.display = "inline"
+        DOM.addNewTodoButton.style.display = "none"
+    } else {
+        DOM.addNewTodoButton.style.display = "inherit"
+        DOM.todoAddForm.style.display = "none"
+    }
+}
+
+
+function setCheckbox(todo, checkbox) {
+    (todo.complete === true) ? checkbox.checked = true: checkbox.checked = false; 
+}
+
+
+function addTodoOnclicks(todo) {
+    const markComplete = document.getElementById(`${todo}checkbox`)
+    const editButton = document.getElementById(`${todo}edit`)
+    const deleteButton = document.getElementById(`${todo}delete`)
+    const saveButton = document.getElementById(`${todo}save`)
+}
+
+/// Eventlisteners
+
+function addOnclickTodoAdd(button, project){
+    button.addEventListener("click", function() {
+        DOMupdate()
+        toggleTodoAddView()
+    })
+}
+
+function createNewTodo(button, project) {
+    button.addEventListener("click", function() {
+        toggleTodoAddView()
+        const title = document.getElementById("todotitleinputnew").value
+        const description = document.getElementById("tododescriptioninputnew").value
+        let dueDate = document.getElementById("duedateinputnew").value
+        const priorityLevel = parseInt(document.getElementById("priorityinputnew").value)
+        const complete = document.getElementById("checkboxinputnew").checked
+        // dueDate = m.formatDueDate(dueDate)
+
+        const newTodo = todo.add(title,description,dueDate,priorityLevel,complete)
+        m.addToProject(newTodo, project)
+        createTodoElement(newTodo)
+        DOMupdate()
+
+
+
+    })
+}
+
+/// Fetch and update 
+
+function DOMupdate(){
+    DOM.addNewProjectButton = document.getElementById("addnewproject")
+    DOM.projectAddForm = document.getElementById("projectaddform")
+    DOM.addNewTodoButton = document.getElementById("todoaddcontainer")
+    DOM.todoAddForm = document.getElementById("todoaddform")
+}
+
+function clearAddTodoForm() {
+
+}
+
+/// Element creation
+function createProjectElement(projectName){
+    const projDiv = document.createElement("div")
+    projDiv.classList = `project projectselector`
+    projDiv.id = `${projectName.id}`
+
+    const projTitle = document.createElement("h5")
+    projTitle.textContent = `${projectName.title}`
+    projTitle.style.cursor = "pointer";
+    projTitle.addEventListener("click", function() {
+        updateProjectTitle(projectName)
+        updateTodosCompleted(projectName)
+        updateTodosRemaining(projectName)
+        clearTodos()
+        populateTodoContainer(projectName)
+    })
+    projDiv.appendChild(projTitle)
+
+
+    const projTimeRemaining = document.createElement("span")
+
+    if (projectName.todos.length === 0) {
+        projTimeRemaining.innerHTML = `<b>No Items Due</b><br>` 
+    } else {
+        const nearestDate = m.getNearestDueDate(projectName)
+        const nearestTodo = formatDistanceToNow(nearestDate)
+        projTimeRemaining.innerHTML = `<b>Next item due:</b><br> 
+        ${nearestTodo}`
+    }
+
+    projDiv.appendChild(projTimeRemaining)
+
+    addDeleteIconDiv(projDiv, projectName.id)
+
+
+    DOM.projectContainer.appendChild(projDiv)
+
 }
 
 function createNewProjButton(){
@@ -266,10 +185,6 @@ function createNewProjButton(){
 
     DOM.projectContainer.appendChild(newDiv)
 }
-
-
-
-
 
 function createTodoElement(todo){
 
@@ -300,8 +215,8 @@ function createTodoElement(todo){
     const todoPriority = document.createElement("div")
     todoPriority.classList = `priority ${todoIndex} todosection`
     todoPriority.id = `${todoIndex}priority`
-    todoPriority.style.color = `${priority.getColor(todo.priorityLevel)}`
-    const priorityPhrase = priority.getWording(todo.priorityLevel)
+    todoPriority.style.color = `${DOM.priority.getColor(todo.priorityLevel)}`
+    const priorityPhrase = DOM.priority.getWording(todo.priorityLevel)
     todoPriority.innerHTML = `<b>Priority:</b> ${priorityPhrase}`
     todoDiv.appendChild(todoPriority)
 
@@ -346,14 +261,15 @@ function createTodoElement(todo){
     saveButton.style.display = "none";
     saveButtonDiv.appendChild(saveButton)
 
-    DOM.todoContainer.appendChild(todoDiv)
+    DOM.todoContainer.insertBefore(todoDiv, DOM.addNewTodoButton)
 }
 
-function createTodoAdd(){
+function createNewTodoButton(project){
         const todoDiv = document.createElement("div")
         todoDiv.classList = `todo`
         todoDiv.id = `todoaddcontainer`
         todoDiv.height = todoDiv.width
+        todoDiv.style.cursor = "pointer"
     
         const todoPlus = document.createElement("div")
         todoPlus.id = `todoplus`
@@ -361,10 +277,138 @@ function createTodoAdd(){
         todoDiv.appendChild(todoPlus)
     
         DOM.todoContainer.insertAdjacentElement("beforeend", todoDiv)
-    
+        addOnclickTodoAdd(todoDiv, project)
 }
 
 
+
+function createProjectAddForm() {
+    const newDiv = document.createElement("div")
+    newDiv.classList = "project"
+    newDiv.id = "projectaddform"
+    newDiv.style.display = "none"
+
+    const newProjectTitleEntry = document.createElement("input")
+    newProjectTitleEntry.type = "text"
+    newProjectTitleEntry.id = "newprojecttitle"
+    newProjectTitleEntry.placeholder = "Project Title"
+    newDiv.appendChild(newProjectTitleEntry)
+
+    const newBr = document.createElement("p")
+    newDiv.appendChild(newBr)
+
+    const newProjectAdd = document.createElement("button")
+    newProjectAdd.id = "newprojectadd"
+    newProjectAdd.textContent = "Add"
+    newProjectAdd.addEventListener("click", function() {
+        const newProj = project.addProject(`title`, `${newProjectTitleEntry.value}`);
+        newProj.id = "project" + (m.projectList.length);
+        m.projectList.push(newProj)
+        clearProjectContainer()
+        populateProjectContainer()
+        console.log(m.projectList)
+    })
+    newBr.appendChild(newProjectAdd)
+
+
+    DOM.projectContainer.appendChild(newDiv)
+
+}
+
+function createTodoAddForm(project) {
+    const newDiv = document.createElement("div")
+    newDiv.classList = "todo"
+    newDiv.id = "todoaddformdiv"
+    newDiv.style.display = "none"
+
+
+
+    const titleDiv = document.createElement("div")
+    titleDiv.classList = "edittitle"
+    newDiv.appendChild(titleDiv)
+
+    const newTodoTitleEntry = document.createElement("textarea")
+    newTodoTitleEntry.classList = "todotitle"
+    newTodoTitleEntry.id = "todotitleinputnew"
+    newTodoTitleEntry.placeholder = "Todo Title"
+    titleDiv.appendChild(newTodoTitleEntry)
+
+    const descriptionDiv = document.createElement("div")
+    descriptionDiv.classList = "tododescription editdescription"
+    newDiv.appendChild(descriptionDiv)
+
+    const newTodoDescriptionEntry = document.createElement("textarea")
+    newTodoDescriptionEntry.maxLength = "90"
+    newTodoDescriptionEntry.classList = "tododescription"
+    newTodoDescriptionEntry.id = "tododescriptioninputnew"
+    newTodoDescriptionEntry.placeholder = "Enter details here."
+    descriptionDiv.appendChild(newTodoDescriptionEntry)
+
+    const dueDateDiv = document.createElement("div")
+    dueDateDiv.classList = "todosection editduedate"
+    dueDateDiv.innerHTML = "<b>Due: </b>"
+    newDiv.appendChild(dueDateDiv)
+
+    const newDueDateEntry = document.createElement("input")
+    newDueDateEntry.type = "datetime-local"
+    newDueDateEntry.className = "duedateinput"
+    newDueDateEntry.id = "duedateinputnew"
+    dueDateDiv.insertAdjacentElement("beforeend", newDueDateEntry)
+
+    const newPriorityDiv = document.createElement("div")
+    newPriorityDiv.classList = "todosection editpriority"
+    newPriorityDiv.innerHTML = "<b>Priority: </b>"
+    newDiv.appendChild(newPriorityDiv)
+
+    const newPriorityEntry = document.createElement("select")
+    newPriorityEntry.id = "priorityinputnew"
+    newPriorityEntry.innerHTML = `
+    <option value="1" id="urgentpriority">Urgent</option>
+    <option value="2" id="vimppriority">Very Important</option>
+    <option value="3" id="imppriority">Important</option>
+    <option value="4" id="avpriority">Average</option>
+    <option value="5" id="nimppriority">Not Important</option>
+    `
+    newPriorityDiv.insertAdjacentElement("beforeend", newPriorityEntry)
+
+    const newConfigBoxDiv = document.createElement("div")
+    newConfigBoxDiv.classList = "todosection configbox"
+
+    const checkboxDiv = document.createElement("div")
+    newConfigBoxDiv.appendChild(checkboxDiv)
+    const newCheckbox = document.createElement("input")
+    newCheckbox.type = "checkbox"
+    newCheckbox.id = "checkboxinputnew"
+    checkboxDiv.appendChild(newCheckbox)
+
+    const newDoneText = document.createElement("div")
+    newDoneText.innerHTML = "Done?"
+    newDoneText.classList = "donetext"
+    newDoneText.id = "donetextnew"
+    newConfigBoxDiv.appendChild(newDoneText)
+
+    const saveDiv = document.createElement("div")
+    newConfigBoxDiv.appendChild(saveDiv)
+    const newSaveButton = document.createElement("button")
+    newSaveButton.textContent = "Save"
+    newSaveButton.classList = "savebutton button"
+    newSaveButton.id = "savebuttonnew"
+    createNewTodo(newSaveButton, project)
+    newConfigBoxDiv.appendChild(newSaveButton)
+
+    const deleteDiv = document.createElement("div")
+    newConfigBoxDiv.appendChild(deleteDiv)
+    const newDeleteButton = document.createElement("button")
+    newDeleteButton.textContent = "Delete"
+    newDeleteButton.classList = "deletebutton button"
+    newDeleteButton.id = "deletebuttonnew"
+    newConfigBoxDiv.appendChild(newDeleteButton)
+
+    newDiv.appendChild(newConfigBoxDiv)
+    DOM.todoContainer.appendChild(newDiv)
+
+
+}
 
 
 function addDeleteIconDiv(parentElement, projectID) {
@@ -394,52 +438,16 @@ function addDeleteIconDiv(parentElement, projectID) {
 }
 
 
-function createProjectElement(projectName){
-    const projDiv = document.createElement("div")
-    projDiv.classList = `project projectselector`
-    projDiv.id = `${projectName.id}`
-
-    const projTitle = document.createElement("h5")
-    projTitle.textContent = `${projectName.title}`
-    projTitle.style.cursor = "pointer";
-    projTitle.addEventListener("click", function() {
-        updateProjectTitle(projectName)
-        updateTodosCompleted(projectName)
-        updateTodosRemaining(projectName)
-        clearTodos()
-        populateTodoContainer(projectName)
-    })
-    projDiv.appendChild(projTitle)
-
-
-    const projTimeRemaining = document.createElement("span")
-
-    if (projectName.todos.length === 0) {
-        projTimeRemaining.innerHTML = `<b>No Items Due</b><br>` 
-    } else {
-        const nearestDate = m.getNearestDueDate(projectName)
-        const nearestTodo = formatDistanceToNow(nearestDate)
-        projTimeRemaining.innerHTML = `<b>Next item due:</b><br> 
-        ${nearestTodo}`
-    }
-
-    projDiv.appendChild(projTimeRemaining)
-
-    addDeleteIconDiv(projDiv, projectName.id)
-
-
-    DOM.projectContainer.appendChild(projDiv)
-
-}
 
 
 
 /// TEST FUNCTIONS
-
+onload.loadExampleTodos()
 clearProjectContainer()
 populateProjectContainer()
 
 DOM.testButton.addEventListener("click", e => {
-    DOM.projectTitle.innerHTML = "Please Select a Project"
+    DOMupdate()
+    toggleTodoAddView()
 })
 
