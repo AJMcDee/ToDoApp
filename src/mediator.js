@@ -85,13 +85,6 @@ export function setTodoDueDate(todo, dateInputFromDOM) {
     todo.dueDate = newDueDate;
 }
 
-export function increasePriority(todo) {
-    (todo.priorityLevel < 5) ? ++todo.priorityLevel : todo.priorityLevel = 5
-}
-
-export function decreasePriority(todo) {
-    (todo.priorityLevel > 1) ? --todo.priorityLevel : todo.priorityLevel = 1
-}
 
 export function setPriority(todo, newValue) {
     todo.priorityLevel = parseInt(newValue)

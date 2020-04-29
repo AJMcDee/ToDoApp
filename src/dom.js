@@ -7,6 +7,9 @@ import * as onload from './iife.js'
 import * as DOM from './domselectors.js'
 
 
+///ADD CLEAR FORM ON NEW TODO
+
+
 
 /// Project functions 
 
@@ -78,18 +81,26 @@ function toggleTodoAddView() {
     }
 }
 
+function getCheckbox(todo, checkbox) {
+    (checkbox.checked === true) ? todo.complete = true: todo.complete = false;
+}
+
 
 function setCheckbox(todo, checkbox) {
     (todo.complete === true) ? checkbox.checked = true: checkbox.checked = false; 
 }
 
-
-function addTodoOnclicks(todo) {
-    const markComplete = document.getElementById(`${todo}checkbox`)
-    const editButton = document.getElementById(`${todo}edit`)
-    const deleteButton = document.getElementById(`${todo}delete`)
-    const saveButton = document.getElementById(`${todo}save`)
+function toggleTitleStrike(todo, checkbox) {
+    const todoElementTitle = document.getElementById(`todo${todo.projectIndex}title`)
+    (checkbox.checked === true) ? todoElementTitle.classList.add("strike") : todoElementTitle.classList.remove("strike");
 }
+
+// function addTodoOnclicks(todo) {
+//     const markComplete = document.getElementById(`${todo}checkbox`)
+//     const editButton = document.getElementById(`${todo}edit`)
+//     const deleteButton = document.getElementById(`${todo}delete`)
+//     const saveButton = document.getElementById(`${todo}save`)
+// }
 
 /// Eventlisteners
 
@@ -114,10 +125,15 @@ function createNewTodo(button, project) {
         m.addToProject(newTodo, project)
         createTodoElement(newTodo)
         DOMupdate()
-
-
-
     })
+}
+
+function addCheckboxEffect(todo, checkbox) {
+    checkbox.addEventListener("click", function() {
+        getCheckbox(todo, checkbox)
+        toggleTitleStrike(todo, checkbox)
+    })
+
 }
 
 /// Fetch and update 
@@ -193,11 +209,13 @@ function createTodoElement(todo){
     todoDiv.classList = `todo ${todoIndex}`
     todoDiv.id = `${todoIndex}container`
 
-    const todoTitle = document.createElement("div")
+    const todoTitleDiv = document.createElement("div")
+    todoDiv.appendChild(todoTitleDiv)
+    const todoTitle = document.createElement("span")
     todoTitle.classList = `todotitle ${todoIndex}`
     todoTitle.id = `${todoIndex}title`
     todoTitle.textContent = todo.title
-    todoDiv.appendChild(todoTitle)
+    todoTitleDiv.appendChild(todoTitle)
 
     const todoDescription = document.createElement("div")
     todoDescription.classList = `tododescription ${todoIndex}`
@@ -229,6 +247,7 @@ function createTodoElement(todo){
     markComplete.type = "checkbox"
     markComplete.id = `${todoIndex}checkbox`
     setCheckbox(todo, markComplete)
+    addCheckboxEffect(todo, markComplete)
     configBox.appendChild(markComplete)
 
     const doneText = document.createElement("div")
@@ -374,12 +393,12 @@ function createTodoAddForm(project) {
     const newConfigBoxDiv = document.createElement("div")
     newConfigBoxDiv.classList = "todosection configbox"
 
-    const checkboxDiv = document.createElement("div")
-    newConfigBoxDiv.appendChild(checkboxDiv)
-    const newCheckbox = document.createElement("input")
-    newCheckbox.type = "checkbox"
-    newCheckbox.id = "checkboxinputnew"
-    checkboxDiv.appendChild(newCheckbox)
+    // const checkboxDiv = document.createElement("div")
+    // newConfigBoxDiv.appendChild(checkboxDiv)
+    // const newCheckbox = document.createElement("input")
+    // newCheckbox.type = "checkbox"
+    // newCheckbox.id = "checkboxinputnew"
+    // checkboxDiv.appendChild(newCheckbox)
 
     const newDoneText = document.createElement("div")
     newDoneText.innerHTML = "Done?"
