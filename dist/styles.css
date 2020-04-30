@@ -6,8 +6,9 @@ pink: #E6BEAE
 camel:  #B2967D 
 black: #272838*/
 body {
-    background-color: #EEE4E1;
-    color: #272838;
+    background-color: #272838;
+    color: #EEE4E1;
+    font-family: 'Indie Flower', cursive, Arial, Helvetica, sans-serif;
 }
 a {
     text-decoration: underline;
@@ -25,7 +26,6 @@ h5 {
 }
 
 #container {
-    background-color: #ECF8F8;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -94,13 +94,11 @@ h5 {
 }
 
 .project {
-    border: 1px solid black;
+    border: 1px solid white;
     padding: 10px;
     margin: 15px;
     border-radius: 10%;
     text-align: center;
-    background-color: #E6BEAE;
-    box-shadow: 2px 2px 2px grey;
     font-size: 14px;
 
 }
@@ -126,13 +124,11 @@ button, input, select, textarea {
 }
 
 .todo {
-    background-color: #E7D8C9;
-    border: 2px solid black;
+    border: 3px solid white;
     padding: 10px;
     margin: 10px;
     flex-basis: 200px;
     border-radius: 10%;
-    box-shadow: 2px 2px 2px grey;
 
     display: flex;
     flex-direction: column;
@@ -151,7 +147,6 @@ button, input, select, textarea {
 .todotitle {
     font-size: 25px;
     flex: 2 1 20%;
-    margin-top: 10px;
     padding: 5px 5px 5px 5px;
 }
 
@@ -178,10 +173,10 @@ a {
 .priority {
     color: #D95D39;
     font-weight: bold;
-    text-shadow: -1px 1px 2px #000,
+    /* text-shadow: -1px 1px 2px #000,
     1px 1px 2px #000,
     1px -1px 0 #000,
-    -1px -1px 0 #000;
+    -1px -1px 0 #000; */
 }
 
 
@@ -259,9 +254,13 @@ a {
     display: flex;
 }
 
+.done {
+    text-decoration: line-through;
+}
+
 @keyframes strike{
     0%   { width : 0; }
-    100% { width: 100%; }
+    100% { width: 90%; }
   }
   .strike {
     position: relative;
@@ -272,11 +271,11 @@ a {
     top: 50%;
     left: 0;
     width: 100%;
-    height: 1px;
-    background: black;
+    height: 2px;
+    background: white;
     animation-name: strike;
     animation-duration: 1s;
     animation-timing-function: linear;
     animation-iteration-count: 1;
-    animation-fill-mode: forwards; 
+    /* animation-fill-mode: backwards;  */
   }

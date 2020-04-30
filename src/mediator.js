@@ -26,16 +26,6 @@ export function addToProject(newTodo, projectName){
         }  
 }
 
-export function removeFromProject(todo, currentProject){
-    console.log(currentProject)
-    // currentProject.todos[todo.projectIndex] = null;
-}
-
-export function changeTodoProject(todo, oldProject, newProject) {
-    removeFromProject(todo, oldProject)
-    addToProject(todo, newProject)
-
-}
 
 
 // Convert date inputs from DOM to code useable by date-fns
@@ -99,7 +89,7 @@ export function getNearestDueDate(project) {
     const purifiedList = _.compact(project.todos)
     let allDueDates = []
     for (let i = 0; i < purifiedList.length; i++) {
-        allDueDates.push(parseISO(purifiedList[i].dueDate))
+        if (purifiedList[i].complete === false) {allDueDates.push(parseISO(purifiedList[i].dueDate))}
     }
     const dateToCompare = new Date()
     return closestTo(dateToCompare, allDueDates)

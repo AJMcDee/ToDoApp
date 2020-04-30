@@ -115,7 +115,11 @@ function setCheckbox(todo, checkbox) {
 
 function toggleTitleStrike(todo, checkbox) {
     const todoElementTitle = document.getElementById(`todo${todo.projectIndex}title`);
-    (checkbox.checked === true) ? todoElementTitle.classList.add("strike") : todoElementTitle.classList.remove("strike");
+    if (checkbox.checked === true) {
+        todoElementTitle.classList.add("strike")}
+    else {
+        todoElementTitle.classList.remove("strike")
+        todoElementTitle.classList.remove("done")}
 }
 
 // function addTodoOnclicks(todo) {
@@ -184,8 +188,8 @@ function addCheckboxEffect(todo, checkbox) {
     checkbox.addEventListener("click", function() {
         getCheckbox(todo, checkbox)
         toggleTitleStrike(todo, checkbox)
-        console.log(todo)
-        console.log(m.projectList)
+        clearProjectContainer()
+        populateProjectContainer()
     })
 
 }
@@ -235,7 +239,6 @@ function applySort(project) {
     switch (sortChoice) {
         case "sortduelast":
             sortedTodoArray = project.todos.sort((a,b) => b.dueDate - a.dueDate);
-            console.log(sortedTodoArray)
     }
 }
 
@@ -264,6 +267,8 @@ function createProjectElement(project){
         const nearestDate = m.getNearestDueDate(project)
         if (isPast(nearestDate)) {
             projTimeRemaining.innerHTML = `<b>Item Overdue!</b><br>`
+        } else if (!nearestDate) {
+            projTimeRemaining.innerHTML = `<b>No Items Due</b><br>`
         } else {
             const nearestTodo = formatDistanceToNow(nearestDate)
             projTimeRemaining.innerHTML = `<b>Next item due:</b><br> 
@@ -310,6 +315,7 @@ function createTodoElement(todo, project){
     todoTitle.id = `${todoIndex}title`
     todoTitle.textContent = todo.title
     todoTitleDiv.appendChild(todoTitle)
+    if (todo.complete === true) {todoTitle.classList.add("done")} 
 
     const todoDescription = document.createElement("div")
     todoDescription.classList = `tododescription ${todoIndex}`
