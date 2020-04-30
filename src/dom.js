@@ -62,16 +62,20 @@ function updateTodosRemaining(projectName) {
 }
 
 function populateTodoContainer(project){
-
-    project.todos.forEach(todo => {
-        createTodoElement(todo)
-    });
     createNewTodoButton(project)
     createTodoAddForm(project)
+    DOMupdate()
+    if (project.todos.length > 0) {
+        project.todos.forEach(todo => {
+            createTodoElement(todo, project)
+        });
+    }
+
+    
 }
 
 function toggleTodoAddView() {
-
+    DOMupdate()
     if (DOM.todoAddForm.style.display === "none") {
         DOM.todoAddForm.style.display = "inline"
         DOM.addNewTodoButton.style.display = "none"
@@ -80,6 +84,19 @@ function toggleTodoAddView() {
         DOM.todoAddForm.style.display = "none"
     }
 }
+
+function toggleTodoEditView(todo) {
+    const todoDisplayDiv = document.getElementById(`todo${todo.projectIndex}container`)
+    const todoEditDiv = document.getElementById(`todo${todo.projectIndex}editcontainer`)
+    if (todoDisplayDiv.style.display === "none") {
+        todoDisplayDiv.style.display = ""
+        todoEditDiv.style.display = "none"
+    } else {
+        todoEditDiv.style.display = ""
+        todoDisplayDiv.style.display = "none"
+    }
+}
+
 
 function getCheckbox(todo, checkbox) {
     (checkbox.checked === true) ? todo.complete = true: todo.complete = false;
@@ -91,7 +108,7 @@ function setCheckbox(todo, checkbox) {
 }
 
 function toggleTitleStrike(todo, checkbox) {
-    const todoElementTitle = document.getElementById(`todo${todo.projectIndex}title`)
+    const todoElementTitle = document.getElementById(`todo${todo.projectIndex}title`);
     (checkbox.checked === true) ? todoElementTitle.classList.add("strike") : todoElementTitle.classList.remove("strike");
 }
 
@@ -113,27 +130,76 @@ function addOnclickTodoAdd(button, project){
 
 function createNewTodo(button, project) {
     button.addEventListener("click", function() {
+        DOMupdate()
         toggleTodoAddView()
         const title = document.getElementById("todotitleinputnew").value
         const description = document.getElementById("tododescriptioninputnew").value
-        let dueDate = document.getElementById("duedateinputnew").value
+        const dueDate = document.getElementById("duedateinputnew").value
         const priorityLevel = parseInt(document.getElementById("priorityinputnew").value)
-        const complete = document.getElementById("checkboxinputnew").checked
-        // dueDate = m.formatDueDate(dueDate)
+        const complete = false //Default value
+
 
         const newTodo = todo.add(title,description,dueDate,priorityLevel,complete)
         m.addToProject(newTodo, project)
-        createTodoElement(newTodo)
-        DOMupdate()
+        createTodoElement(newTodo, project)
     })
 }
+
+function updateTodoValues(todo) {
+    todo.title = document.getElementById(`todo${todo.projectIndex}edittitle`).value
+    todo.description = document.getElementById(`todo${todo.projectIndex}editdescription`).value
+    todo.dueDate = document.getElementById(`todo${todo.projectIndex}editduedate`).value
+    todo.priorityLevel = parseInt(document.getElementById(`todo${todo.projectIndex}editpriority`).value)
+    console.log(todo)
+    console.log(m.projectList)
+
+}
+
+function updateTodoElement(todo, project) {
+    DOMupdate()
+    const formerDiv = document.getElementById(`todo${todo.projectIndex}container`)
+    const formerTodoEditForm = document.getElementById(`todo${todo.projectIndex}editcontainer`)
+    const divAfter = formerDiv.nextElementSibling
+    DOM.todoContainer.removeChild(formerDiv)
+    DOM.todoContainer.removeChild(formerTodoEditForm)
+    createTodoElement(todo, project)
+    const newDiv = document.getElementById(`todo${todo.projectIndex}container`)
+    const newTodoEditForm = document.getElementById(`todo${todo.projectIndex}editcontainer`)
+    DOM.todoContainer.insertBefore(newDiv, divAfter)
+    newDiv.before(newTodoEditForm)
+
+
+}
+
 
 function addCheckboxEffect(todo, checkbox) {
     checkbox.addEventListener("click", function() {
         getCheckbox(todo, checkbox)
         toggleTitleStrike(todo, checkbox)
+        console.log(todo)
+        console.log(m.projectList)
     })
 
+}
+
+function populateProjectTodosOnClick(target, project) {
+    target.addEventListener("click", function() {
+        updateProjectTitle(project)
+        updateTodosCompleted(project)
+        updateTodosRemaining(project)
+        clearTodos()
+        populateTodoContainer(project)
+        DOMupdate()
+    })
+}
+
+function populateProjectTodos(project) {
+    updateProjectTitle(project)
+    updateTodosCompleted(project)
+    updateTodosRemaining(project)
+    clearTodos()
+    populateTodoContainer(project)
+    DOMupdate()
 }
 
 /// Fetch and update 
@@ -142,7 +208,7 @@ function DOMupdate(){
     DOM.addNewProjectButton = document.getElementById("addnewproject")
     DOM.projectAddForm = document.getElementById("projectaddform")
     DOM.addNewTodoButton = document.getElementById("todoaddcontainer")
-    DOM.todoAddForm = document.getElementById("todoaddform")
+    DOM.todoAddForm = document.getElementById("todoaddformdiv")
 }
 
 function clearAddTodoForm() {
@@ -150,30 +216,25 @@ function clearAddTodoForm() {
 }
 
 /// Element creation
-function createProjectElement(projectName){
+function createProjectElement(project){
     const projDiv = document.createElement("div")
     projDiv.classList = `project projectselector`
-    projDiv.id = `${projectName.id}`
+    projDiv.id = `${project.id}`
 
     const projTitle = document.createElement("h5")
-    projTitle.textContent = `${projectName.title}`
+    projTitle.textContent = `${project.title}`
     projTitle.style.cursor = "pointer";
-    projTitle.addEventListener("click", function() {
-        updateProjectTitle(projectName)
-        updateTodosCompleted(projectName)
-        updateTodosRemaining(projectName)
-        clearTodos()
-        populateTodoContainer(projectName)
-    })
+    populateProjectTodosOnClick(projTitle, project)
+
     projDiv.appendChild(projTitle)
 
 
     const projTimeRemaining = document.createElement("span")
 
-    if (projectName.todos.length === 0) {
+    if (project.todos.length === 0) {
         projTimeRemaining.innerHTML = `<b>No Items Due</b><br>` 
     } else {
-        const nearestDate = m.getNearestDueDate(projectName)
+        const nearestDate = m.getNearestDueDate(project)
         const nearestTodo = formatDistanceToNow(nearestDate)
         projTimeRemaining.innerHTML = `<b>Next item due:</b><br> 
         ${nearestTodo}`
@@ -181,7 +242,7 @@ function createProjectElement(projectName){
 
     projDiv.appendChild(projTimeRemaining)
 
-    addDeleteIconDiv(projDiv, projectName.id)
+    addDeleteIconDiv(projDiv, project.id)
 
 
     DOM.projectContainer.appendChild(projDiv)
@@ -208,6 +269,7 @@ function createTodoElement(todo){
     const todoDiv = document.createElement("div")
     todoDiv.classList = `todo ${todoIndex}`
     todoDiv.id = `${todoIndex}container`
+    DOM.priority.updateBorder(todoDiv, todo.priorityLevel)
 
     const todoTitleDiv = document.createElement("div")
     todoDiv.appendChild(todoTitleDiv)
@@ -226,7 +288,7 @@ function createTodoElement(todo){
     const todoDueDate = document.createElement("div")
     todoDueDate.classList = `tododuedate ${todoIndex} todosection`
     todoDueDate.id = `${todoIndex}duedate`
-    const dueDateForDOM = format(parseISO(todo.dueDate), 'dd MMM yyyy')
+    const dueDateForDOM = format(parseISO(todo.dueDate), 'dd MMM yyyy, h:mm aaaa')
     todoDueDate.innerHTML = `<b>Due:</b> ${dueDateForDOM}`
     todoDiv.appendChild(todoDueDate)
 
@@ -270,17 +332,28 @@ function createTodoElement(todo){
     deleteButton.id = `${todoIndex}delete`
     deleteButton.textContent = "Delete";
     deleteButtonDiv.appendChild(deleteButton)
+    deleteButton.addEventListener("click", function(){
+        let confirmation = confirm("Are you sure you want to remove this item?")
+        if (confirmation === true) {
+            DOMupdate()
+            DOM.todoContainer.removeChild(todoDiv)
+            const todoEdit = document.getElementById(`todo${todo.projectIndex}editcontainer`)
+            DOM.todoContainer.removeChild(todoEdit)
 
-    const saveButtonDiv = document.createElement("div")
-    configBox.appendChild(saveButtonDiv)
-    const saveButton = document.createElement("button")
-    saveButton.classList = `savebutton ${todoIndex}`
-    saveButton.id = `${todoIndex}save`
-    saveButton.textContent = "Save";
-    saveButton.style.display = "none";
-    saveButtonDiv.appendChild(saveButton)
+            ///FIND A WAY TO REMOVE PROJECT FROM PROJECT LIST HERE
+
+        }
+
+
+    })
+
 
     DOM.todoContainer.insertBefore(todoDiv, DOM.addNewTodoButton)
+    createTodoEditForm(todo, todoDiv, project)
+    editButton.addEventListener("click", function () {
+        toggleTodoEditView(todo)
+    })
+
 }
 
 function createNewTodoButton(project){
@@ -319,14 +392,17 @@ function createProjectAddForm() {
     const newProjectAdd = document.createElement("button")
     newProjectAdd.id = "newprojectadd"
     newProjectAdd.textContent = "Add"
+
+    
     newProjectAdd.addEventListener("click", function() {
         const newProj = project.addProject(`title`, `${newProjectTitleEntry.value}`);
         newProj.id = "project" + (m.projectList.length);
         m.projectList.push(newProj)
         clearProjectContainer()
         populateProjectContainer()
-        console.log(m.projectList)
+        populateProjectTodos(newProj) 
     })
+    
     newBr.appendChild(newProjectAdd)
 
 
@@ -400,11 +476,11 @@ function createTodoAddForm(project) {
     // newCheckbox.id = "checkboxinputnew"
     // checkboxDiv.appendChild(newCheckbox)
 
-    const newDoneText = document.createElement("div")
-    newDoneText.innerHTML = "Done?"
-    newDoneText.classList = "donetext"
-    newDoneText.id = "donetextnew"
-    newConfigBoxDiv.appendChild(newDoneText)
+    // const newDoneText = document.createElement("div")
+    // newDoneText.innerHTML = "Done?"
+    // newDoneText.classList = "donetext"
+    // newDoneText.id = "donetextnew"
+    // newConfigBoxDiv.appendChild(newDoneText)
 
     const saveDiv = document.createElement("div")
     newConfigBoxDiv.appendChild(saveDiv)
@@ -413,7 +489,8 @@ function createTodoAddForm(project) {
     newSaveButton.classList = "savebutton button"
     newSaveButton.id = "savebuttonnew"
     createNewTodo(newSaveButton, project)
-    newConfigBoxDiv.appendChild(newSaveButton)
+
+    saveDiv.appendChild(newSaveButton)
 
     const deleteDiv = document.createElement("div")
     newConfigBoxDiv.appendChild(deleteDiv)
@@ -421,13 +498,119 @@ function createTodoAddForm(project) {
     newDeleteButton.textContent = "Delete"
     newDeleteButton.classList = "deletebutton button"
     newDeleteButton.id = "deletebuttonnew"
-    newConfigBoxDiv.appendChild(newDeleteButton)
+    deleteDiv.appendChild(newDeleteButton)
 
     newDiv.appendChild(newConfigBoxDiv)
-    DOM.todoContainer.appendChild(newDiv)
+    DOM.todoContainer.insertAdjacentElement("beforeend", newDiv)
 
 
 }
+
+function createTodoEditForm(todo, todoDiv, project) {
+
+    const newDiv = document.createElement("div")
+    newDiv.id = `todo${todo.projectIndex}editcontainer`
+    newDiv.classList = "todo"
+    newDiv.style.display = "none"
+
+    const titleDiv = document.createElement("div")
+    titleDiv.classList = "edittitle"
+    newDiv.appendChild(titleDiv)
+
+    const newTodoTitleEntry = document.createElement("textarea")
+    newTodoTitleEntry.classList = "todotitle"
+    newTodoTitleEntry.id = `todo${todo.projectIndex}edittitle`
+    newTodoTitleEntry.value = todo.title
+    titleDiv.appendChild(newTodoTitleEntry)
+
+    const descriptionDiv = document.createElement("div")
+    descriptionDiv.classList = "tododescription editdescription"
+    newDiv.appendChild(descriptionDiv)
+
+    const newTodoDescriptionEntry = document.createElement("textarea")
+    newTodoDescriptionEntry.maxLength = "90"
+    newTodoDescriptionEntry.classList = "tododescription"
+    newTodoDescriptionEntry.id = `todo${todo.projectIndex}editdescription`
+    newTodoDescriptionEntry.value = todo.description
+    descriptionDiv.appendChild(newTodoDescriptionEntry)
+
+    const dueDateDiv = document.createElement("div")
+    dueDateDiv.classList = "todosection editduedate"
+    dueDateDiv.innerHTML = "<b>Due: </b>"
+    newDiv.appendChild(dueDateDiv)
+
+    const newDueDateEntry = document.createElement("input")
+    newDueDateEntry.defaultValue = todo.dueDate //??? does this work??
+    newDueDateEntry.type = "datetime-local"
+    newDueDateEntry.className = "duedateinput"
+    newDueDateEntry.id = `todo${todo.projectIndex}editduedate`
+    dueDateDiv.insertAdjacentElement("beforeend", newDueDateEntry)
+
+    const newPriorityDiv = document.createElement("div")
+    newPriorityDiv.classList = "todosection editpriority"
+    newPriorityDiv.innerHTML = "<b>Priority: </b>"
+    newDiv.appendChild(newPriorityDiv)
+
+    const newPriorityEntry = document.createElement("select")
+    newPriorityEntry.id = `todo${todo.projectIndex}editpriority`
+    newPriorityEntry.innerHTML = `
+    <option value="1" id="urgentpriority">Urgent</option>
+    <option value="2" id="vimppriority">Very Important</option>
+    <option value="3" id="imppriority">Important</option>
+    <option value="4" id="avpriority">Average</option>
+    <option value="5" id="nimppriority">Not Important</option>
+    `
+    newPriorityEntry.value = todo.priorityLevel
+    newPriorityDiv.insertAdjacentElement("beforeend", newPriorityEntry)
+
+    const newConfigBoxDiv = document.createElement("div")
+    newConfigBoxDiv.classList = "todosection configbox"
+
+    // const checkboxDiv = document.createElement("div")
+    // newConfigBoxDiv.appendChild(checkboxDiv)
+    // const newCheckbox = document.createElement("input")
+    // newCheckbox.type = "checkbox"
+    // newCheckbox.id = "checkboxinputnew"
+    // checkboxDiv.appendChild(newCheckbox)
+
+    // const newDoneText = document.createElement("div")
+    // newDoneText.innerHTML = "Done?"
+    // newDoneText.classList = "donetext"
+    // newDoneText.id = "donetextnew"
+    // newConfigBoxDiv.appendChild(newDoneText)
+
+    const saveDiv = document.createElement("div")
+    newConfigBoxDiv.appendChild(saveDiv)
+    const newSaveButton = document.createElement("button")
+    newSaveButton.textContent = "Save"
+    newSaveButton.classList = "savebutton button"
+    newSaveButton.id = `todo${todo.projectIndex}savebutton`
+    newSaveButton.addEventListener("click", function() {
+        updateTodoValues(todo)
+        updateTodoElement(todo, project)
+    })
+    
+
+    saveDiv.appendChild(newSaveButton)
+
+    const cancelDiv = document.createElement("div")
+    newConfigBoxDiv.appendChild(cancelDiv)
+    const newCancelButton = document.createElement("button")
+    newCancelButton.textContent = "Cancel"
+    newCancelButton.classList = "cancelbutton button"
+    newCancelButton.id = "cancelbuttonnew"
+    newCancelButton.addEventListener("click", function(){
+        //reset form
+        toggleTodoEditView(todo)
+    })
+    cancelDiv.appendChild(newCancelButton)
+
+    newDiv.appendChild(newConfigBoxDiv)
+
+    DOM.todoContainer.insertBefore(newDiv, todoDiv)
+}
+
+
 
 
 function addDeleteIconDiv(parentElement, projectID) {
@@ -466,7 +649,8 @@ clearProjectContainer()
 populateProjectContainer()
 
 DOM.testButton.addEventListener("click", e => {
-    DOMupdate()
-    toggleTodoAddView()
+    const edittodo1 = document.getElementById("todo1editcontainer")
+    const todo1 = document.getElementById("todo1container")
+    todo1.before(edittodo1)
 })
 

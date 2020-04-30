@@ -26,8 +26,9 @@ export function addToProject(newTodo, projectName){
         }  
 }
 
-export function removeFromProject(todo, project){
-    project.todos[todo.projectIndex] = null;
+export function removeFromProject(todo, currentProject){
+    console.log(currentProject)
+    // currentProject.todos[todo.projectIndex] = null;
 }
 
 export function changeTodoProject(todo, oldProject, newProject) {
@@ -72,6 +73,7 @@ export function formatDueDate(dateInputFromDOM) {
     let newDueDate = toDate(new Date(year, month, day, hour, min))
     return newDueDate 
 }
+
 
 
 // Change properties of the todo

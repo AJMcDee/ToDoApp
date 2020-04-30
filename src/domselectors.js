@@ -34,55 +34,61 @@ const projectTitle = document.getElementById("projecttitle")
     }
 
 
-    export const priority = (() => {
-        const getColor = function(priorityNumber) {
-            switch (priorityNumber) {
-                case 1:
-                    return '#D95D39'
-                    break;
-                case 2:
-                    return '#DC965A'
-                    break;
-                case 3:
-                    return '#FFE98C'
-                    break;
-                case 4:
-                    return '#95AFBA'
-                    break;
-                case 5:
-                    return '#BDC893'
-                    break;
-                                                
-                default:
-                    break;
-            }
+export const priority = (() => {
+    const getColor = function(priorityNumber) {
+        switch (priorityNumber) {
+            case 1:
+                return '#D95D39'
+                break;
+            case 2:
+                return '#DC965A'
+                break;
+            case 3:
+                return '#FFE98C'
+                break;
+            case 4:
+                return '#95AFBA'
+                break;
+            case 5:
+                return '#BDC893'
+                break;
+                                            
+            default:
+                break;
         }
-    
-        function getWording(priorityNumber) {
-            switch (priorityNumber) {
-                case 1:
-                    return 'Urgent'
-                    break;
-                case 2:
-                    return 'Very Important'
-                    break;
-                case 3:
-                    return 'Important'
-                    break;
-                case 4:
-                    return 'Average'
-                    break;
-                case 5:
-                    return 'Not Important'
-                    break;
-                                                
-                default:
-                    break;
-            }
+    }
+
+    function getWording(priorityLevel) {
+        switch (priorityLevel) {
+            case 1:
+                return 'Urgent'
+                break;
+            case 2:
+                return 'Very Important'
+                break;
+            case 3:
+                return 'Important'
+                break;
+            case 4:
+                return 'Average'
+                break;
+            case 5:
+                return 'Not Important'
+                break;
+                                            
+            default:
+                break;
         }
-    
-        return {
-            getColor,
-            getWording
-        }
-    })();
+    }
+
+    function updateBorder(todoElement, priorityLevel) {
+        console.log(todoElement)
+        todoElement.style.borderColor = getColor(priorityLevel)
+    }
+
+    return {
+        getColor,
+        getWording,
+        updateBorder
+    }
+})();
