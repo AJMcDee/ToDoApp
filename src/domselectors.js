@@ -11,6 +11,7 @@ const projectTitle = document.getElementById("projecttitle")
     const sortPriorityHighLow = document.getElementById("sortpriorityhighlow")
     const sortPriorityLowHigh = document.getElementById("sortprioritylowhigh")
     const sortSelect = document.getElementById("sort")
+    const switchView = document.getElementById("switchview")
 
 
     let addNewProjectButton
@@ -43,7 +44,8 @@ const projectTitle = document.getElementById("projecttitle")
         sortDueLast,
         sortPriorityHighLow,
         sortPriorityLowHigh,
-        sortSelect
+        sortSelect,
+        switchView
     }
 
 

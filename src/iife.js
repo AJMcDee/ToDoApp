@@ -42,12 +42,11 @@ export function loadExampleTodos(){
 }
 
 (function addListeners() {
-    document.getElementById("switchview").addEventListener("click", toggleView)
+    document.getElementById("switchview").addEventListener("click", function () {
+        listview.toggle(listview.active)
+    } )
 
 })()
 
-function toggleView() {
-    listview.implement()
-}
 
 //FIX THIS

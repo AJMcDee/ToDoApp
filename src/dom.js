@@ -75,16 +75,18 @@ function populateTodoContainer(project, arrayOfTodos){
         });
     }
 
+    listview.setDisplayStyle(listview.active)
+
     
 }
 
 function toggleTodoAddView() {
     DOMupdate()
     if (DOM.todoAddForm.style.display === "none") {
-        DOM.todoAddForm.style.display = "inline"
+        DOM.todoAddForm.style.display = ""
         DOM.addNewTodoButton.style.display = "none"
     } else {
-        DOM.addNewTodoButton.style.display = "inherit"
+        DOM.addNewTodoButton.style.display = ""
         DOM.todoAddForm.style.display = "none"
     }
 }
@@ -148,6 +150,7 @@ function createNewTodo(button, project) {
         clearProjectContainer()
         populateProjectContainer()
         createTodoElement(newTodo, project)
+        listview.setDisplayStyle(listview.active)
     })
 }
 
@@ -156,8 +159,6 @@ function updateTodoValues(todo) {
     todo.description = document.getElementById(`todo${todo.projectIndex}editdescription`).value
     todo.dueDate = document.getElementById(`todo${todo.projectIndex}editduedate`).value
     todo.priorityLevel = parseInt(document.getElementById(`todo${todo.projectIndex}editpriority`).value)
-    console.log(todo)
-    console.log(m.projectList)
 
 }
 
@@ -173,6 +174,7 @@ function updateTodoElement(todo, project) {
     const newTodoEditForm = document.getElementById(`todo${todo.projectIndex}editcontainer`)
     DOM.todoContainer.insertBefore(newDiv, divAfter)
     newDiv.before(newTodoEditForm)
+    listview.setDisplayStyle(listview.active)
 
 
 }
@@ -197,6 +199,7 @@ function populateProjectTodosOnClick(target, project) {
         clearTodos()
         populateTodoContainer(project, project.todos)
         DOMupdate()
+        listview.setDisplayStyle(listview.active)
     })
 }
 
@@ -208,6 +211,7 @@ function populateProjectTodos(project, arrayOfTodos) {
     clearTodos()
     populateTodoContainer(project, arrayOfTodos)
     DOMupdate()
+    listview.setDisplayStyle(listview.active)
 }
 
 /// Fetch and update 
@@ -220,9 +224,8 @@ function DOMupdate(){
 }
 
 function addSortFunctionality(project) {
-    DOM.sortSelect.onchange = console.log("Mwuahahaha")
-    DOM.sortDueFirst.onchange = console.log("AHA!")
-    DOM.sortDueLast.onchange = console.log("OH MY")
+
+    ///GET THIS WORKING
 
 } 
 
@@ -680,6 +683,6 @@ clearProjectContainer()
 populateProjectContainer()
 
 DOM.testButton.addEventListener("click", e => {
-    listview.implement()
+    listview.toggle()
 })
 
