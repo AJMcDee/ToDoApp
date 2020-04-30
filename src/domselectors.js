@@ -6,15 +6,24 @@ const projectTitle = document.getElementById("projecttitle")
     const todosRemaining = document.getElementById("todosremaining")
     const projectContainer = document.getElementById("projectcontainer")
     const testButton = document.getElementById("testbutton")
+    const sortDueFirst = document.getElementById("sortduefirst")
+    const sortDueLast = document.getElementById("sortduelast")
+    const sortPriorityHighLow = document.getElementById("sortpriorityhighlow")
+    const sortPriorityLowHigh = document.getElementById("sortprioritylowhigh")
+    const sortSelect = document.getElementById("sort")
+
+
     let addNewProjectButton
     let projectAddForm
     let todoAddForm
     let addNewTodoButton
 
-    function projectObject(projectName) {
-        const projObj = m.projectList.find(proj => proj.id === projectName)
-        return projObj
-    }
+    // function projectObject(projectName) {
+    //     const projObj = m.projectList.find(proj => proj.id === projectName)
+    //     return projObj
+    // }
+
+
 
 
 
@@ -25,12 +34,16 @@ const projectTitle = document.getElementById("projecttitle")
         todoContainer,
         projectContainer,
         testButton,
-        projectObject,
+        // projectObject,
         addNewProjectButton,
         projectAddForm,
         todoAddForm,
         addNewTodoButton,
-
+        sortDueFirst,
+        sortDueLast,
+        sortPriorityHighLow,
+        sortPriorityLowHigh,
+        sortSelect
     }
 
 

@@ -1,10 +1,11 @@
-import { formatDistanceToNow, format, toDate, parseISO } from 'date-fns'
+import { formatDistanceToNow, format, parseISO, isPast } from 'date-fns'
 import _ from 'lodash'
 import * as todo from './todo.js'
 import * as project from './project.js'
 import * as m from './mediator.js'
 import * as onload from './iife.js'
 import * as DOM from './domselectors.js'
+import * as listview from './listview.js'
 
 
 ///ADD CLEAR FORM ON NEW TODO
@@ -61,12 +62,15 @@ function updateTodosRemaining(projectName) {
     DOM.todosRemaining.textContent = m.numStillToDo(projectName)
 }
 
-function populateTodoContainer(project){
+function populateTodoContainer(project, arrayOfTodos){
     createNewTodoButton(project)
     createTodoAddForm(project)
     DOMupdate()
-    if (project.todos.length > 0) {
-        project.todos.forEach(todo => {
+
+    const todosCountWithoutNulls = _.compact(arrayOfTodos)
+    console.log(todosCountWithoutNulls)
+    if (todosCountWithoutNulls.length > 0) {
+        arrayOfTodos.forEach(todo => {
             createTodoElement(todo, project)
         });
     }
@@ -141,6 +145,8 @@ function createNewTodo(button, project) {
 
         const newTodo = todo.add(title,description,dueDate,priorityLevel,complete)
         m.addToProject(newTodo, project)
+        clearProjectContainer()
+        populateProjectContainer()
         createTodoElement(newTodo, project)
     })
 }
@@ -187,18 +193,20 @@ function populateProjectTodosOnClick(target, project) {
         updateProjectTitle(project)
         updateTodosCompleted(project)
         updateTodosRemaining(project)
+        addSortFunctionality(project)
         clearTodos()
-        populateTodoContainer(project)
+        populateTodoContainer(project, project.todos)
         DOMupdate()
     })
 }
 
-function populateProjectTodos(project) {
+function populateProjectTodos(project, arrayOfTodos) {
     updateProjectTitle(project)
     updateTodosCompleted(project)
     updateTodosRemaining(project)
+    addSortFunctionality(project)
     clearTodos()
-    populateTodoContainer(project)
+    populateTodoContainer(project, arrayOfTodos)
     DOMupdate()
 }
 
@@ -211,9 +219,25 @@ function DOMupdate(){
     DOM.todoAddForm = document.getElementById("todoaddformdiv")
 }
 
-function clearAddTodoForm() {
+function addSortFunctionality(project) {
+    DOM.sortSelect.onchange = console.log("Mwuahahaha")
+    DOM.sortDueFirst.onchange = console.log("AHA!")
+    DOM.sortDueLast.onchange = console.log("OH MY")
 
+} 
+
+function applySort(project) {
+    let sortedTodoArray = []
+    let sortChoice = DOM.sortSelect.value
+    switch (sortChoice) {
+        case "sortduelast":
+            sortedTodoArray = project.todos.sort((a,b) => b.dueDate - a.dueDate);
+            console.log(sortedTodoArray)
+    }
 }
+
+
+
 
 /// Element creation
 function createProjectElement(project){
@@ -235,9 +259,14 @@ function createProjectElement(project){
         projTimeRemaining.innerHTML = `<b>No Items Due</b><br>` 
     } else {
         const nearestDate = m.getNearestDueDate(project)
-        const nearestTodo = formatDistanceToNow(nearestDate)
-        projTimeRemaining.innerHTML = `<b>Next item due:</b><br> 
-        ${nearestTodo}`
+        if (isPast(nearestDate)) {
+            projTimeRemaining.innerHTML = `<b>Item Overdue!</b><br>`
+        } else {
+            const nearestTodo = formatDistanceToNow(nearestDate)
+            projTimeRemaining.innerHTML = `<b>Next item due:</b><br> 
+            ${nearestTodo}`
+        }
+
     }
 
     projDiv.appendChild(projTimeRemaining)
@@ -263,7 +292,7 @@ function createNewProjButton(){
     DOM.projectContainer.appendChild(newDiv)
 }
 
-function createTodoElement(todo){
+function createTodoElement(todo, project){
 
     const todoIndex = `todo${todo.projectIndex}`
     const todoDiv = document.createElement("div")
@@ -339,8 +368,10 @@ function createTodoElement(todo){
             DOM.todoContainer.removeChild(todoDiv)
             const todoEdit = document.getElementById(`todo${todo.projectIndex}editcontainer`)
             DOM.todoContainer.removeChild(todoEdit)
+            project.todos[todo.projectIndex] = null;
+            clearProjectContainer()
+            populateProjectContainer()
 
-            ///FIND A WAY TO REMOVE PROJECT FROM PROJECT LIST HERE
 
         }
 
@@ -400,7 +431,7 @@ function createProjectAddForm() {
         m.projectList.push(newProj)
         clearProjectContainer()
         populateProjectContainer()
-        populateProjectTodos(newProj) 
+        populateProjectTodos(newProj, newProj.todos) 
     })
     
     newBr.appendChild(newProjectAdd)
@@ -649,8 +680,6 @@ clearProjectContainer()
 populateProjectContainer()
 
 DOM.testButton.addEventListener("click", e => {
-    const edittodo1 = document.getElementById("todo1editcontainer")
-    const todo1 = document.getElementById("todo1container")
-    todo1.before(edittodo1)
+    listview.implement()
 })
 

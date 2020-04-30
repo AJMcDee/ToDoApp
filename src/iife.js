@@ -3,6 +3,7 @@ import * as onload from './iife.js'
 import * as m from './mediator.js'
 import * as todo from './todo.js'
 import * as project from './project.js'
+import * as listview from './listview.js'
 
 export function loadExampleTodos(){
     const partyProject = project.addProject("partyProject", "Party Time");
@@ -40,3 +41,13 @@ export function loadExampleTodos(){
 
 }
 
+(function addListeners() {
+    document.getElementById("switchview").addEventListener("click", toggleView)
+
+})()
+
+function toggleView() {
+    listview.implement()
+}
+
+//FIX THIS
