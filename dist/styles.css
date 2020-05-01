@@ -6,7 +6,7 @@ pink: #E6BEAE
 camel:  #B2967D 
 black: #272838*/
 body {
-    background-color: #272838;
+    background-color:black;
     color: #EEE4E1;
     font-family: 'Raleway', Arial, Helvetica, sans-serif;
 }
@@ -56,13 +56,13 @@ h5 {
 }
 
 #newprojectplus {
-    font-size: 50px;
+    font-size: 60px;
     line-height: 50px;
+    justify-self: center;
+    margin: auto;
 }
 
-#addnewproject {
-    padding-top: 0px;
-}
+
 
 #optionsandtodocontainer {
     display: flex;
@@ -94,6 +94,8 @@ h5 {
 }
 
 .project {
+    display: flex;
+    flex-direction: column;
     border: 1px solid white;
     padding: 10px;
     margin: 15px;
@@ -101,7 +103,17 @@ h5 {
     text-align: center;
     font-size: 14px;
     flex-basis: 100px;
+    min-height: 80px;
+    justify-content: space-between;
 
+}
+
+.project:hover {
+    background-color: #272838
+}
+
+.todo:hover {
+    background-color: #272838
 }
 
 
@@ -146,7 +158,7 @@ button, input, select, textarea {
 }
 
 .todotitle {
-    font-size: 25px;
+    font-size: 20px;
     flex: 2 1 20%;
     padding: 5px 5px 5px 5px;
 }
@@ -266,7 +278,7 @@ a {
 
 @keyframes strike{
     0%   { width : 0; }
-    100% { width: 90%; }
+    100% { width: 100%; }
   }
   .strike {
     position: relative;
