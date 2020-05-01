@@ -12,11 +12,13 @@ const projectTitle = document.getElementById("projecttitle")
     const sortPriorityLowHigh = document.getElementById("sortprioritylowhigh")
     const sortSelect = document.getElementById("sort")
     const switchView = document.getElementById("switchview")
+    const sortButton = document.getElementById("sortbutton")
 
 
     let addNewProjectButton
     let projectAddForm
     let todoAddForm
+    let todoAddFormForm
     let addNewTodoButton
 
     // function projectObject(projectName) {
@@ -29,6 +31,7 @@ const projectTitle = document.getElementById("projecttitle")
 
 
     export {
+        todoAddFormForm,
         projectTitle,
         todosCompleted,
         todosRemaining,
@@ -45,7 +48,8 @@ const projectTitle = document.getElementById("projecttitle")
         sortPriorityHighLow,
         sortPriorityLowHigh,
         sortSelect,
-        switchView
+        switchView,
+        sortButton
     }
 
 

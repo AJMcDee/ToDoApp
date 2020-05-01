@@ -1,4 +1,8 @@
-import { formatDistanceToNow, format, parseISO, isPast } from 'date-fns'
+import * as firebase from "firebase/app";
+import "firebase/analytics";
+import "firebase/auth";
+import "firebase/firestore"
+import { formatDistanceToNow, format, parseISO, isPast, compareAsc } from 'date-fns'
 import _ from 'lodash'
 import * as todo from './todo.js'
 import * as project from './project.js'
@@ -6,6 +10,9 @@ import * as m from './mediator.js'
 import * as onload from './iife.js'
 import * as DOM from './domselectors.js'
 import * as listview from './listview.js'
+
+  
+// var db = firebase.firestore();
 
 
 ///ADD CLEAR FORM ON NEW TODO
@@ -151,6 +158,21 @@ function createNewTodo(button, project) {
 
         const newTodo = todo.add(title,description,dueDate,priorityLevel,complete)
         m.addToProject(newTodo, project)
+
+        // const projectRef = db.collection("project").doc(`${project.ID}`)
+        // projectRef.update({
+        //     todos: firebase.firestore.FieldValue.arrayUnion(todo)
+        // })
+
+        //     .then(function() {
+        //         console.log("Document successfully written!");
+        //     })
+        //     .catch(function(error) {
+        //         console.error("Error writing document: ", error);
+        //     });
+        
+        DOM.todoAddFormForm.reset()
+        console.log(DOM.todoAddForm)
         clearProjectContainer()
         populateProjectContainer()
         createTodoElement(newTodo, project)
@@ -225,21 +247,39 @@ function DOMupdate(){
     DOM.projectAddForm = document.getElementById("projectaddform")
     DOM.addNewTodoButton = document.getElementById("todoaddcontainer")
     DOM.todoAddForm = document.getElementById("todoaddformdiv")
+    DOM.todoAddFormForm = document.getElementById("todoaddformform")
 }
 
 function addSortFunctionality(project) {
-
-    ///GET THIS WORKING
+    DOM.sortButton.addEventListener("click", function() {
+        applySort(project)
+    })
 
 } 
 
 function applySort(project) {
     let sortedTodoArray = []
     let sortChoice = DOM.sortSelect.value
-    switch (sortChoice) {
-        case "sortduelast":
-            sortedTodoArray = project.todos.sort((a,b) => b.dueDate - a.dueDate);
+    console.log(sortChoice)
+    if (sortChoice === "sortduelast") {
+        sortedTodoArray = project.todos.sort((a,b) => compareAsc(parseISO(b.dueDate), parseISO(a.dueDate)));
+        clearTodos()
+        populateTodoContainer(project, sortedTodoArray)
+    } else if (sortChoice === "sortduefirst") {
+        sortedTodoArray = project.todos.sort((a,b) => compareAsc(parseISO(a.dueDate), parseISO(b.dueDate)));
+        clearTodos()
+        populateTodoContainer(project, sortedTodoArray)
+    } else if (sortChoice === "sortpriorityhighlow") {
+        sortedTodoArray = project.todos.sort((a,b) => a.priorityLevel - b.priorityLevel)
+        clearTodos()
+        populateTodoContainer(project, sortedTodoArray)
+    } else if (sortChoice === "sortprioritylowhigh") {
+        sortedTodoArray = project.todos.sort((a,b) => b.priorityLevel - a.priorityLevel)
+        clearTodos()
+        populateTodoContainer(project, sortedTodoArray)
     }
+
+    console.log(sortedTodoArray)
 }
 
 
@@ -438,6 +478,16 @@ function createProjectAddForm() {
         const newProj = project.addProject(`title`, `${newProjectTitleEntry.value}`);
         newProj.id = "project" + (m.projectList.length);
         m.projectList.push(newProj)
+
+        // db.collection("project").doc(`${newProj.id}`).set(newProj)
+        //     .then(function() {
+        //         console.log("Document successfully written!");
+        //     })
+        //     .catch(function(error) {
+        //         console.error("Error writing document: ", error);
+                // });
+
+
         clearProjectContainer()
         populateProjectContainer()
         populateProjectTodos(newProj, newProj.todos) 
@@ -451,16 +501,20 @@ function createProjectAddForm() {
 }
 
 function createTodoAddForm(project) {
+
     const newDiv = document.createElement("div")
     newDiv.classList = "todo"
     newDiv.id = "todoaddformdiv"
     newDiv.style.display = "none"
 
+    const newForm = document.createElement("form")
+    newForm.id = "todoaddformform"
+    newDiv.appendChild(newForm)
 
 
     const titleDiv = document.createElement("div")
     titleDiv.classList = "edittitle"
-    newDiv.appendChild(titleDiv)
+    newForm.appendChild(titleDiv)
 
     const newTodoTitleEntry = document.createElement("textarea")
     newTodoTitleEntry.classList = "todotitle"
@@ -470,7 +524,7 @@ function createTodoAddForm(project) {
 
     const descriptionDiv = document.createElement("div")
     descriptionDiv.classList = "tododescription editdescription"
-    newDiv.appendChild(descriptionDiv)
+    newForm.appendChild(descriptionDiv)
 
     const newTodoDescriptionEntry = document.createElement("textarea")
     newTodoDescriptionEntry.maxLength = "90"
@@ -482,7 +536,7 @@ function createTodoAddForm(project) {
     const dueDateDiv = document.createElement("div")
     dueDateDiv.classList = "todosection editduedate"
     dueDateDiv.innerHTML = "<b>Due: </b>"
-    newDiv.appendChild(dueDateDiv)
+    newForm.appendChild(dueDateDiv)
 
     const newDueDateEntry = document.createElement("input")
     newDueDateEntry.type = "datetime-local"
@@ -493,7 +547,7 @@ function createTodoAddForm(project) {
     const newPriorityDiv = document.createElement("div")
     newPriorityDiv.classList = "todosection editpriority"
     newPriorityDiv.innerHTML = "<b>Priority: </b>"
-    newDiv.appendChild(newPriorityDiv)
+    newForm.appendChild(newPriorityDiv)
 
     const newPriorityEntry = document.createElement("select")
     newPriorityEntry.id = "priorityinputnew"
@@ -687,8 +741,7 @@ function addDeleteIconDiv(parentElement, projectID) {
 onload.loadExampleTodos()
 clearProjectContainer()
 populateProjectContainer()
+clearTodos()
+populateTodoContainer(m.projectList[0], m.projectList[0].todos)
 
-DOM.testButton.addEventListener("click", e => {
-    listview.toggle()
-})
 

@@ -1,9 +1,24 @@
+import * as firebase from "firebase/app";
+import "firebase/analytics";
+import "firebase/auth";
+import "firebase/firestore"
 import _ from 'lodash'
 import * as onload from './iife.js'
 import * as m from './mediator.js'
 import * as todo from './todo.js'
 import * as project from './project.js'
 import * as listview from './listview.js'
+
+firebase.initializeApp({
+    apiKey: "AIzaSyA8l-V6lbB9kxm4ggzmqDlJ9NmW6Ihikkw",
+    authDomain: "todolist-67e8c.firebaseapp.com",
+    projectId: "todolist-67e8c",
+  });
+  
+  
+var db = firebase.firestore();
+
+
 
 export function loadExampleTodos(){
     const partyProject = project.addProject("partyProject", "Party Time");
@@ -39,6 +54,17 @@ export function loadExampleTodos(){
     m.formatDueDate(todo5.dueDate)
 
 
+// ///Firebase test parameters
+
+// db.collection("todo").doc("todo2").set(todo2)
+// .then(function() {
+//     console.log("Document successfully written!");
+// })
+// .catch(function(error) {
+//     console.error("Error writing document: ", error);
+// });
+
+
 }
 
 (function addListeners() {
@@ -48,5 +74,3 @@ export function loadExampleTodos(){
 
 })()
 
-
-//FIX THIS

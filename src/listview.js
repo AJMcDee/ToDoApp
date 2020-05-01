@@ -1,3 +1,4 @@
+import * as firebase from "firebase/app";
 import * as DOM from './domselectors.js'
 import { toggleCompleted } from './mediator.js'
 
