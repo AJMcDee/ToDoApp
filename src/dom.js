@@ -2,7 +2,7 @@ import * as firebase from "firebase/app";
 import "firebase/analytics";
 import "firebase/auth";
 import "firebase/firestore"
-import { formatDistanceToNow, format, parseISO, isPast, compareAsc } from 'date-fns'
+import { formatDistanceToNow, format, parseISO, isPast, compareAsc, isValid } from 'date-fns'
 import _ from 'lodash'
 import * as todo from './todo.js'
 import * as project from './project.js'
@@ -147,36 +147,48 @@ function addOnclickTodoAdd(button, project){
 
 function createNewTodo(button, project) {
     button.addEventListener("click", function() {
-        DOMupdate()
-        toggleTodoAddView()
-        const title = document.getElementById("todotitleinputnew").value
-        const description = document.getElementById("tododescriptioninputnew").value
-        const dueDate = document.getElementById("duedateinputnew").value
-        const priorityLevel = parseInt(document.getElementById("priorityinputnew").value)
-        const complete = false //Default value
+        let dueDate
+        if (isValid(parseISO(document.getElementById("duedateinputnew").value))) {        
+    
+            dueDate = document.getElementById("duedateinputnew").value 
+
+            const title = document.getElementById("todotitleinputnew").value
+            const description = document.getElementById("tododescriptioninputnew").value
+            
+            const priorityLevel = parseInt(document.getElementById("priorityinputnew").value)
+            const complete = false //Default value
 
 
-        const newTodo = todo.add(title,description,dueDate,priorityLevel,complete)
-        m.addToProject(newTodo, project)
+            DOMupdate()
+            toggleTodoAddView()
 
-        // const projectRef = db.collection("project").doc(`${project.ID}`)
-        // projectRef.update({
-        //     todos: firebase.firestore.FieldValue.arrayUnion(todo)
-        // })
 
-        //     .then(function() {
-        //         console.log("Document successfully written!");
-        //     })
-        //     .catch(function(error) {
-        //         console.error("Error writing document: ", error);
-        //     });
-        
-        DOM.todoAddFormForm.reset()
-        console.log(DOM.todoAddForm)
-        clearProjectContainer()
-        populateProjectContainer()
-        createTodoElement(newTodo, project)
-        listview.setDisplayStyle(listview.active)
+            const newTodo = todo.add(title,description,dueDate,priorityLevel,complete)
+            m.addToProject(newTodo, project)
+
+            // const projectRef = db.collection("project").doc(`${project.ID}`)
+            // projectRef.update({
+            //     todos: firebase.firestore.FieldValue.arrayUnion(todo)
+            // })
+
+            //     .then(function() {
+            //         console.log("Document successfully written!");
+            //     })
+            //     .catch(function(error) {
+            //         console.error("Error writing document: ", error);
+            //     });
+            
+            DOM.todoAddFormForm.reset()
+            console.log(DOM.todoAddForm)
+            clearProjectContainer()
+            populateProjectContainer()
+            createTodoElement(newTodo, project)
+            listview.setDisplayStyle(listview.active)
+        } else {
+            alert("Date invalid: please enter a full date and time")
+        }
+
+
     })
 }
 
@@ -206,12 +218,14 @@ function updateTodoElement(todo, project) {
 }
 
 
-function addCheckboxEffect(todo, checkbox) {
+function addCheckboxEffect(todo, checkbox, project) {
     checkbox.addEventListener("click", function() {
         getCheckbox(todo, checkbox)
         toggleTitleStrike(todo, checkbox)
         clearProjectContainer()
         populateProjectContainer()
+        updateTodosRemaining(project)
+        updateTodosCompleted(project)
     })
 
 }
@@ -328,7 +342,7 @@ function createProjectElement(project){
 
 function createNewProjButton(){
     const newDiv = document.createElement("div")
-    newDiv.innerHTML = `<span id="newprojectplus">+</span><br>`
+    newDiv.innerHTML = `<span id="newprojectplus">+</span>`
     newDiv.classList = "project"
     newDiv.id = "addnewproject"
     newDiv.style.cursor = "pointer"
@@ -387,7 +401,7 @@ function createTodoElement(todo, project){
     markComplete.type = "checkbox"
     markComplete.id = `${todoIndex}checkbox`
     setCheckbox(todo, markComplete)
-    addCheckboxEffect(todo, markComplete)
+    addCheckboxEffect(todo, markComplete, project)
     configBox.appendChild(markComplete)
 
     const doneText = document.createElement("div")
@@ -492,6 +506,12 @@ function createProjectAddForm() {
         populateProjectContainer()
         populateProjectTodos(newProj, newProj.todos) 
     })
+
+    newProjectTitleEntry.addEventListener("keyup", function(event) {
+        if (event.keyCode === 13) {
+          newProjectAdd.click();
+        }
+    })
     
     newBr.appendChild(newProjectAdd)
 
@@ -520,6 +540,7 @@ function createTodoAddForm(project) {
     newTodoTitleEntry.classList = "todotitle"
     newTodoTitleEntry.id = "todotitleinputnew"
     newTodoTitleEntry.placeholder = "Todo Title"
+    newTodoTitleEntry.maxLength = "15"
     titleDiv.appendChild(newTodoTitleEntry)
 
     const descriptionDiv = document.createElement("div")
@@ -584,14 +605,24 @@ function createTodoAddForm(project) {
     newSaveButton.id = "savebuttonnew"
     createNewTodo(newSaveButton, project)
 
+    newTodoTitleEntry.addEventListener("keyup", function(event) {
+        if (event.keyCode === 13) {
+          newSaveButton.click();
+        }
+    })
+
     saveDiv.appendChild(newSaveButton)
 
     const deleteDiv = document.createElement("div")
     newConfigBoxDiv.appendChild(deleteDiv)
     const newDeleteButton = document.createElement("button")
-    newDeleteButton.textContent = "Delete"
+    newDeleteButton.textContent = "Cancel"
     newDeleteButton.classList = "deletebutton button"
     newDeleteButton.id = "deletebuttonnew"
+    newDeleteButton.addEventListener("click", function() {
+        DOM.todoAddFormForm.reset()
+        toggleTodoAddView()
+    })
     deleteDiv.appendChild(newDeleteButton)
 
     newDiv.appendChild(newConfigBoxDiv)
@@ -615,6 +646,7 @@ function createTodoEditForm(todo, todoDiv, project) {
     newTodoTitleEntry.classList = "todotitle"
     newTodoTitleEntry.id = `todo${todo.projectIndex}edittitle`
     newTodoTitleEntry.value = todo.title
+    newTodoTitleEntry.maxLength = "15"
     titleDiv.appendChild(newTodoTitleEntry)
 
     const descriptionDiv = document.createElement("div")
@@ -728,6 +760,7 @@ function addDeleteIconDiv(parentElement, projectID) {
     iconDiv.appendChild(icon)
     icon.width = "20"
     icon.height = "20"
+    icon.style.cursor = "pointer"
 
     parentElement.appendChild(iconDiv)
 
@@ -740,8 +773,10 @@ function addDeleteIconDiv(parentElement, projectID) {
 /// TEST FUNCTIONS
 onload.loadExampleTodos()
 clearProjectContainer()
-populateProjectContainer()
 clearTodos()
+populateProjectContainer()
 populateTodoContainer(m.projectList[0], m.projectList[0].todos)
-
+updateProjectTitle(m.projectList[0])
+updateTodosRemaining(m.projectList[0])
+updateTodosCompleted(m.projectList[0])
 

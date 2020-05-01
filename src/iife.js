@@ -28,22 +28,22 @@ export function loadExampleTodos(){
     m.projectList.push(workProject)
 
 
-    let todo1 = todo.add("Todo title", "Todo description", 
+    let todo1 = todo.add("Do a Little Dance", "Preferably salsa or merengue.", 
         "2021-03-24T18:30", 3, false);
-    let todo2 = todo.add("Todo 2 title", "Todo description", 
-        "2020-06-24T18:30", 3, true);
-    let todo3 = todo.add("Todo 3 title", "Todo description", 
+    let todo2 = todo.add("Make a Little Love", "Yeahhhhhhh buddy.", 
+        "2020-05-06T18:30", 1, false);
+    let todo3 = todo.add("Get Down Tonight", "Boogie like it's 1969", 
         "2020-09-22T18:30", 2, false);
-    let todo4 = todo.add("Todo 4 title", "Todo description", 
-        "2020-04-30T18:30", 1, false);
-    let todo5 = todo.add("Todo 5 title", "Todo description", 
-        "2020-04-29T18:30", 2, false);
+    let todo4 = todo.add("BACK TO WORK", "There is so much left to do. This app will be edited for eternity.", 
+        "2020-04-30T18:30", 4, false);
+    let todo5 = todo.add("Refactor this code", "Damn girl, that's a lot of code for a small app.", 
+        "2020-04-29T18:30", 5, false);
 
     
     m.addToProject(todo1, partyProject)
-    m.addToProject(todo2, workProject)
-    m.addToProject(todo3, workProject)
-    m.addToProject(todo4, partyProject)
+    m.addToProject(todo2, partyProject)
+    m.addToProject(todo3, partyProject)
+    m.addToProject(todo4, workProject)
     m.addToProject(todo5, workProject)
 
 
