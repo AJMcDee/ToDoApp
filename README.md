@@ -12,6 +12,7 @@ Todos and projects are objects, with todos stored within each relevant project a
 - More padding to todo cells
 - Clarify when a project is currently selected
 - Update priority colouring to be based on classes rather than applied styling
+- Sorting doesn't work on the preloaded project example
 
 ## Created
 
