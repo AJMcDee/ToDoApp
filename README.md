@@ -2,7 +2,7 @@
 
 A todo-list app built as part of my completion of The Odin Project curriculum.
 
-[View the project here](https://github.com/AJMcDee/ToDoApp)
+[View the project here](https://ajmcdee.github.io/ToDoApp/)
 
 ## General principles
 
