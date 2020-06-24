@@ -2,6 +2,8 @@
 
 A todo-list app built as part of my completion of The Odin Project curriculum.
 
+[View the project here](https://github.com/AJMcDee/ToDoApp)
+
 ## General principles
 
 Todos and projects are objects, with todos stored within each relevant project as an array. The projects are stored in their entirety (including todos) in a separate array. All values are written to and read from this collection. 
